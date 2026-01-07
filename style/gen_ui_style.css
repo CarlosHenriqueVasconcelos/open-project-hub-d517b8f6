@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&display=swap');
+
+body {
+    background: #E7E9F6;
+    font-family: "Anek Bangla", sans-serif;
+    font-weight: 500;
+}
+
+.menuBox a {
+    text-decoration: none;
+    color: black;
+}
+
+.logo img {
+    position: absolute;
+    top: 2vw;
+    left: 2.5vw;
+    width: 12vw;
+}
+
+.menuBox {
+    position: absolute;
+    background: white;
+    width: 9.9vw;
+    height: 72.2vh;
+    top: 13.7vh;
+    left: 5.21vw;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.universityLogo {
+    width: 73.7%;
+    padding-top: 2.31vh;
+}
+
+.menuTxt {
+    position: absolute;
+    font-size: 1.4vh;
+    color: #99A0A5;
+    top: 11.85vh;
+    left: 2.31vh;
+    letter-spacing: 5%;
+    font-weight: 350;
+}
+
+.menuBtns {
+    position: absolute;
+    top: 16vh;
+    width: 100%;
+}
+
+.homeButton,
+.coursesButton,
+.studentsButton {
+    width: 76.32%;
+    height: 4.4vh;
+    top: 18.5vh;
+    font-size: 1.8vh;
+    margin-left: 12.09%;
+    border-radius: 5px;
+    margin-bottom: 1.4vh;
+    text-align: left;
+    cursor: pointer;
+}
+
+.homeButton i,
+.coursesButton i,
+.studentsButton i,
+.logoutButton i {
+    font-size: 1.6vh;
+    padding-top: 9%;
+    padding-left: 12.5%;
+}
+
+.homeButton span,
+.coursesButton span,
+.studentsButton span,
+.logoutButton span {
+    padding-top: 9%;
+    padding-left: 4%;
+}
+
+.logoutButton {
+    width: 76.32%;
+    height: 4.4vh;
+    margin-top: 32vh;
+    font-size: 1.8vh;
+    margin-left: 12.09%;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.upperBox {
+    position: absolute;
+    background: white;
+    width: 78.13vw;
+    height: 9.26vh;
+    top: 13.7vh;
+    left: 16.67vw;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageTitle {
+    font-size: 2.95vh;
+    font-weight: 650;
+    padding-left: 2.13%;
+    padding-top: 1%;
+    max-width: 50%;
+}
+
+.upBoxTools {
+    max-width: 40%;
+}
+
+.searchBox {
+    width: 10.5vw;
+    border-radius: 30px;
+    height: 4.9vh;
+    outline: none;
+    padding-left: 3%;
+	background: #E7E9F6;
+    font-weight: 500;
+	border: 1px solid #d4d4d4;
+    margin-left: 15%;
+    font-family: "Anek Bangla", sans-serif;
+    font-weight: 540;
+    color: #7C7C7C;
+}
+
+.searchBox::placeholder {
+    font-family: "Anek Bangla", sans-serif;
+    font-weight: 540;
+    color: #7C7C7C;
+}
+
+#searchIcon {
+    position: absolute;
+    padding-left: 14.2vw;
+    padding-top: 2.2%;
+    color: #7C7C7C;
+}
+
+#notificationBell {
+    padding-left: 3%;
+    padding-right: 10.15%;
+    font-size: 3vh;
+    cursor: pointer;
+}
+
+.profPic {
+    width: 8%;
+    position: relative;
+    top: 20%;
+}
+
+.profPic img {
+    border-radius: 50%;
+}
+
+.userName {
+    text-decoration: none;
+    color: inherit;
+    padding-left: 2%;
+    font-size: 2.3vh;
+    font-weight: 550;
+}
+
+.mainBox {
+    position: absolute;
+    background: white;
+    width: 78.13vw;
+    height: 60.18vh;
+    top: 25.92vh;
+    left: 16.67vw;
+    border-radius: 15px;
+}
+
+.mainTitle {
+    margin-top: 2%;
+    margin-left: 1.5%;
+}
+
+.mainSubTitle {
+    font-family: "Anek Bangla", sans-serif;
+    font-size: 1.5vh;
+    font-weight: 600;
+    color: #7C7C7C;
+    margin-left: 2%;
+}

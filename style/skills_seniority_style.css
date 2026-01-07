@@ -1,0 +1,39 @@
+.skillsBox {
+    margin-top: 1%;
+    margin-left: 2%;
+}
+
+.skills {
+    margin-top: 1%;
+}
+
+i {
+    cursor: pointer;
+}
+
+.skillsBox {
+    width: 20%;
+}
+
+.save_btn {
+    font-family: "Anek Bangla", sans-serif;
+    background: #692DFF;
+    border: solid 1px #692DFF;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 2%;
+    bottom: 4%;
+}
+
+.skill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.skillName {
+    flex-grow: 1; 
+    text-align: left;
+}

@@ -1,0 +1,73 @@
+.skillsBox {
+    margin-top: 0.5%;
+    margin-left: 2%;
+    width: 40%;
+    height: 5vh;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.8vh;
+    justify-content: center;
+}
+
+.skillsBox i,
+.addedSkills i {
+    font-size: 1.5vh;
+    padding-left: 0.5vh;
+    align-self: center;
+}
+
+.skill {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height: auto;
+    border: 1.8px solid #7C7C7C;
+    color: #7C7C7C;
+    background: #E7E9F6;
+    padding-left: 1%;
+    padding-right: 1%;
+    cursor: pointer;
+}
+
+.newSkillsBox {
+    position: absolute;
+    top: 30%;
+    left: 1.5%;
+}
+
+.skillsInput {
+    margin-top: 1%;
+    width: 14.5vw;
+    border-radius: 9px;
+    height: 3.9vh;
+    outline: none;
+    padding-left: 2%;
+	background: #E7E9F6;
+    font-weight: 500;
+	border: 1px solid #d4d4d4;
+    font-family: "Anek Bangla", sans-serif;
+    font-weight: 540;
+    color: #7C7C7C;
+}
+
+.addedSkills {
+    margin-top: 12%;
+    margin-left: 2%;
+    width: 40%;
+    height: 5vh;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.8vh;
+    justify-content: left;
+}
+
+.save_btn {
+    font-family: "Anek Bangla", sans-serif;
+    background: #692DFF;
+    border: solid 1px #692DFF;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 2%;
+    bottom: 4%;
+}

@@ -1,73 +1,143 @@
-# Welcome to your Lovable project
 
-## Project info
+# Bem-vindo ao seu projeto Plataforma gestão MEI-U
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Informações do Projeto
 
-## How can I edit this code?
+**URL**: https://meiu.pg.utfpr.edu.br/
 
-There are several ways of editing your application.
+## Como editar este código?
 
-**Use Lovable**
+Existem várias maneiras de editar sua aplicação.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+O único requisito é ter Node.js & npm instalados - [instale com nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Siga estes passos:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Passo 1: Clone o repositório usando a URL Git do projeto.
+git clone <URL_DO_SEU_GIT>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Passo 2: Navegue até o diretório do projeto.
+cd <NOME_DO_SEU_PROJETO>
 
-# Step 3: Install the necessary dependencies.
+# Passo 3: Instale as dependências necessárias.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Passo 4: Inicie o servidor de desenvolvimento com recarregamento automático e visualização instantânea.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Editar um arquivo diretamente no GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Navegue até o(s) arquivo(s) desejado(s).
+- Clique no botão "Edit" (ícone de lápis) no canto superior direito da visualização do arquivo.
+- Faça suas alterações e commit as mudanças.
 
-**Use GitHub Codespaces**
+**Usar GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Navegue até a página principal do seu repositório.
+- Clique no botão "Code" (botão verde) próximo ao canto superior direito.
+- Selecione a aba "Codespaces".
+- Clique em "New codespace" para iniciar um novo ambiente Codespace.
+- Edite os arquivos diretamente dentro do Codespace e faça commit e push de suas alterações quando terminar.
 
-## What technologies are used for this project?
+## Configuração do Firebase
 
-This project is built with:
+Para configurar o Firebase em seu projeto:
+
+1. Acesse o [Console do Firebase](https://console.firebase.google.com/)
+2. Crie um novo projeto ou selecione um existente
+3. No painel do projeto, clique em "Adicionar aplicativo" e selecione "Web"
+4. Registre o aplicativo com um nome de sua escolha
+5. Copie as configurações do Firebase fornecidas
+6. No projeto, atualize o arquivo `src/lib/firebase.ts` com suas configurações
+
+Exemplo de configuração do Firebase:
+```typescript
+const firebaseConfig = {
+  apiKey: "sua-api-key",
+  authDomain: "seu-projeto.firebaseapp.com",
+  projectId: "seu-projeto",
+  storageBucket: "seu-projeto.appspot.com",
+  messagingSenderId: "seu-id",
+  appId: "seu-app-id"
+};
+```
+
+## Tecnologias Utilizadas
+
+Este projeto é construído com:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Firebase (Autenticação)
+- jsPDF (Geração de PDFs)
+- React Router DOM
+- React Query
 
-## How can I deploy this project?
+## Estrutura do Projeto
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```
+src/
+├── components/      # Componentes reutilizáveis
+├── pages/          # Páginas da aplicação
+├── lib/            # Configurações e utilidades
+└── config/         # Arquivos de configuração
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Funcionalidades Principais
 
-Yes, you can!
+- Autenticação com Google (domínio @alunos.utfpr.edu.br)
+- Formulário multi-etapas para inscrição
+- Upload de documentos
+- Geração de PDF de confirmação
+- Interface responsiva e intuitiva
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Requisitos do Sistema
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Node.js 18.x ou superior
+- npm 8.x ou superior
+- Navegador moderno (Chrome, Firefox, Safari, Edge)
+
+## Comandos Disponíveis
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm run dev
+
+# Construir para produção
+npm run build
+
+# Visualizar build de produção
+npm run preview
+```
+
+## Como fazer o Deploy
+
+--escrever algo melhor
+
+## Solução de Problemas
+
+Se você encontrar problemas durante a configuração ou execução do projeto:
+
+1. Verifique se todas as dependências foram instaladas corretamente
+2. Confirme se as configurações do Firebase estão corretas
+3. Certifique-se de que está usando as versões corretas do Node.js e npm
+4. Verifique os logs do console para mensagens de erro específicas
+
+## Suporte
+
+Se precisar de ajuda:
+
+- Abra uma issue no GitHub
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+

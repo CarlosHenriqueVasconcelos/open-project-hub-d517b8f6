@@ -1,0 +1,20 @@
+.gradesBox,
+.finalGrade {
+    margin-left: 2%;
+}
+
+.finalGrade {
+    font-weight: 550;
+}
+
+.send_btn {
+    font-family: "Anek Bangla", sans-serif;
+    background: #692DFF;
+    border: solid 1px #692DFF;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 2%;
+    bottom: 4%;
+}
