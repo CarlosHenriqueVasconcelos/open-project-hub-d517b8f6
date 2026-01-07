@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql_plataforma_gestao_ia:
+    image: mysql:latest
+    command: --bind-address=0.0.0.0 --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: plat@forma_i@_2024
+      MYSQL_DATABASE: PlataformaGestao # Adicione para criar o banco automaticamente
+    ports:
+      - "3306:3306"
+    networks:
+      - rede_plataforma_gestao
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  be_plataforma_gestao_ia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql_plataforma_gestao_ia
+    ports:
+      - "5058:80"
+    environment:
+      MYSQL_HOST: mysql_plataforma_gestao_ia 
+      MYSQL_USER: root
+      MYSQL_PASSWORD: plat@forma_i@_2024
+      MYSQL_DATABASE: PlataformaGestao
+      BD_ENVIRONMENT: Docker
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+      - rede_plataforma_gestao
+
+networks:
+  rede_plataforma_gestao:
+    name: rede_plataforma_gestao
+    driver: bridge
