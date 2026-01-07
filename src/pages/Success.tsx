@@ -165,14 +165,14 @@ const Success = () => {
                 if (i > 1) newDoc.addPage();
                 newDoc.setPage(i);
                 newDoc.addPage();
-                newDoc.addFileToVFS(`page${i}.pdf`, doc.output('arraybuffer'));
-                newDoc.addImage(`page${i}.pdf`, 'PDF', 0, 0, 210, 297);
+              const pdfOutput = doc.output('arraybuffer');
+              newDoc.addFileToVFS(`page${i}.pdf`, new Uint8Array(pdfOutput).reduce((data, byte) => data + String.fromCharCode(byte), ''));
               }
               
               // Adiciona o documento enviado pelo usuário
               newDoc.addPage();
-              newDoc.addFileToVFS('uploaded.pdf', existingPdfBytes);
-              newDoc.addImage('uploaded.pdf', 'PDF', 0, 0, 210, 297);
+              const uploadedBytes = new Uint8Array(existingPdfBytes);
+              newDoc.addFileToVFS('uploaded.pdf', uploadedBytes.reduce((data, byte) => data + String.fromCharCode(byte), ''));
               
               // Salva o documento combinado
               newDoc.save("confirmacao-inscricao.pdf");

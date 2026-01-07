@@ -1,17 +1,16 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route, Navigate } from "react-router-dom"; // Remova o BrowserRouter
-import { Toaster } from "@admin/components/ui/toaster";
-import { AuthProvider } from "@admin/contexts/AuthContext";
-import { SidebarProvider, SidebarTrigger } from "@admin/components/ui/sidebar";
-import { AppSidebar } from "@admin/components/AppSidebar";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
+import { AppSidebar } from "./components/AppSidebar";
 import { useEffect } from "react";
-import Login from "@admin/pages/Login";
-import Dashboard from "@admin/pages/Dashboard";
-import Skills from "@admin/pages/Skills";
-import Projects from "@admin/pages/Projects";
-import ProjectSkills from "@admin/pages/ProjectSkills";
-import GeneralConfigs from "@admin/pages/Configs";
-import { useAuth } from "@admin/contexts/AuthContext";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Skills from "./pages/Skills";
+import Projects from "./pages/Projects";
+import ProjectSkills from "./pages/ProjectSkills";
+import GeneralConfigs from "./pages/Configs";
 
 const queryClient = new QueryClient();
 

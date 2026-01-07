@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { login as apiLogin } from "@admin/services/api";
-import { LoginRequest } from "@admin/types";
-import { useToast } from "@admin/hooks/use-toast";
+import { login as apiLogin } from "../services/api";
+import { LoginRequest } from "../types";
+import { useToast } from "../hooks/use-toast";
 
 interface AuthContextType {
   isAuthenticated: boolean;

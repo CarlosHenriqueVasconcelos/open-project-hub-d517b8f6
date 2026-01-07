@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getStudentRegistrations, getSkills } from "@admin/services/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@admin/components/ui/card";
-import { ScrollArea } from "@admin/components/ui/scroll-area";
-import { Button } from "@admin/components/ui/button";
+import { getStudentRegistrations, getSkills } from "../services/api";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { ScrollArea } from "../components/ui/scroll-area";
+import { Button } from "../components/ui/button";
 import { Download } from "lucide-react";
 import {
   Select,
@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@admin/components/ui/select";
+} from "../components/ui/select";
 import {
   Table,
   TableBody,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@admin/components/ui/table";
+} from "../components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -27,14 +27,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@admin/components/ui/pagination";
-import { getCurrentSemester, generateSemesterOptions } from "@admin/utils/semesterUtils";
-import RegistrationsChart from "@admin/components/RegistrationsChart";
-import SkillsDistributionChart from "@admin/components/SkillsDistributionChart";
-import StudentSearch from "@admin/components/StudentSearch";
-import PDFViewer from "@admin/components/PDFViewer";
-import { StudentRegistration } from "@admin/types";
-import { API_BASE_URL } from "@admin/config/api";
+} from "../components/ui/pagination";
+import { getCurrentSemester, generateSemesterOptions } from "../utils/semesterUtils";
+import RegistrationsChart from "../components/RegistrationsChart";
+import SkillsDistributionChart from "../components/SkillsDistributionChart";
+import StudentSearch from "../components/StudentSearch";
+import PDFViewer from "../components/PDFViewer";
+import { StudentRegistration } from "../types";
+import { API_BASE_URL } from "../config/api";
 
 
 const ITEMS_PER_PAGE = 5;

@@ -1,4 +1,4 @@
-import { Input } from "@admin/components/ui/input";
+import { Input } from "./ui/input";
 import { Search } from "lucide-react";
 
 interface StudentSearchProps {

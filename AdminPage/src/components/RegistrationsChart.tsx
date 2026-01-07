@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@admin/components/ui/card";
-import { ChartContainer, ChartTooltip } from "@admin/components/ui/chart";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { ChartContainer, ChartTooltip } from "./ui/chart";
 import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { StudentRegistration } from "@admin/types";
+import { StudentRegistration } from "../types";
 
 interface RegistrationsChartProps {
   registrations: StudentRegistration[];

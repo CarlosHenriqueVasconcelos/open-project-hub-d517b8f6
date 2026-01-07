@@ -1,7 +1,7 @@
 
 import axios from "axios";
-import { API_BASE_URL } from "@admin/config/api";
-import { LoginRequest, LoginResponse, ApiResponse, StudentRegistration, Skill, Project, GeneralConfig } from "@admin/types";
+import { API_BASE_URL } from "../config/api";
+import { LoginRequest, LoginResponse, ApiResponse, StudentRegistration, Skill, Project, GeneralConfig } from "../types";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

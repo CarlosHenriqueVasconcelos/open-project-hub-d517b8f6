@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Card, CardContent, CardHeader, CardTitle } from "@admin/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@admin/components/ui/select";
-import { Button } from "@admin/components/ui/button";
-import { useToast } from "@admin/hooks/use-toast";
-import { Project, Skill } from "@admin/types";
-import { StarRating } from "@admin/components/StarRating";
+} from "../components/ui/select";
+import { Button } from "../components/ui/button";
+import { useToast } from "../hooks/use-toast";
+import { Project, Skill } from "../types";
+import { StarRating } from "../components/StarRating";
 import { Download } from "lucide-react";
-import { API_BASE_URL } from "@admin/config/api";
+import { API_BASE_URL } from "../config/api";
 
 interface ProjectSkill {
   id: number;

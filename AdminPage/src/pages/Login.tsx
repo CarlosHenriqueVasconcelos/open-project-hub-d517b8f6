@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useAuth } from "@admin/contexts/AuthContext";
-import { Button } from "@admin/components/ui/button";
-import { Input } from "@admin/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@admin/components/ui/card";
+import { useAuth } from "../contexts/AuthContext";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 
 const Login = () => {
   const [email, setEmail] = useState("");
