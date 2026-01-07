@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { useToast } from "@admin/hooks/use-toast";
-import { Button } from "@admin/components/ui/button";
-import { Label } from "@admin/components/ui/label";
+import { useToast } from "../hooks/use-toast";
+import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { GeneralConfig } from "@admin/types";
-import { Input } from "@admin/components/ui/input";
-import { API_BASE_URL } from "@admin/config/api";
+import { GeneralConfig } from "../types";
+import { Input } from "../components/ui/input";
+import { API_BASE_URL } from "../config/api";
 
 const GeneralConfigs = () => {
   const { toast } = useToast();

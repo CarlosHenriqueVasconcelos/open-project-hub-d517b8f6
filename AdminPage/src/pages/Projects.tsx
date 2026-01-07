@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Card, CardContent, CardHeader, CardTitle } from "@admin/components/ui/card";
-import { Button } from "@admin/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import { Plus } from "lucide-react";
-import { useToast } from "@admin/hooks/use-toast";
+import { useToast } from "../hooks/use-toast";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@admin/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,10 +20,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@admin/components/ui/alert-dialog";
-import ProjectForm from "@admin/components/ProjectForm";
-import { Project } from "@admin/types";
-import { API_BASE_URL } from "@admin/config/api";
+} from "../components/ui/alert-dialog";
+import ProjectForm from "../components/ProjectForm";
+import { Project } from "../types";
+import { API_BASE_URL } from "../config/api";
 
 const Projects = () => {
   const { toast } = useToast();

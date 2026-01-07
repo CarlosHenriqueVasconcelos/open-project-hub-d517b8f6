@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@admin/components/ui/dialog";
-import { Button } from "@admin/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Button } from "./ui/button";
 import { FileText } from "lucide-react";
-import { API_BASE_URL } from "@admin/config/api";
+import { API_BASE_URL } from "../config/api";
 
 interface PDFViewerProps {
   pdfUrl?: string;

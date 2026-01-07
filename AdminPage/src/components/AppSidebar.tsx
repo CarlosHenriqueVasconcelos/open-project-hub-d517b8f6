@@ -1,6 +1,6 @@
 import { Home, BookOpen, Boxes, BoxesIcon, PackageCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@admin/contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +11,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
-} from "@admin/components/ui/sidebar";
-import { Button } from "@admin/components/ui/button";
+} from "./ui/sidebar";
+import { Button } from "./ui/button";
 
 const menuItems = [
   {

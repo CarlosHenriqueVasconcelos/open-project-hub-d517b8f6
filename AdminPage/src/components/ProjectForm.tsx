@@ -1,15 +1,15 @@
 
 import { useState } from "react";
-import { useToast } from "@admin/hooks/use-toast";
-import { Button } from "@admin/components/ui/button";
-import { Input } from "@admin/components/ui/input";
-import { Label } from "@admin/components/ui/label";
-import { Textarea } from "@admin/components/ui/textarea";
-import { Project } from "@admin/types";
+import { useToast } from "../hooks/use-toast";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Project } from "../types";
 import { useQueryClient } from "@tanstack/react-query";
-import { Checkbox } from "@admin/components/ui/checkbox";
+import { Checkbox } from "./ui/checkbox";
 import axios from "axios";
-import { API_BASE_URL } from "@admin/config/api";
+import { API_BASE_URL } from "../config/api";
 
 interface ProjectFormProps {
   project?: Project;
