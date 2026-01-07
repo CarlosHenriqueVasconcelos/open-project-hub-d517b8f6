@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Form from "./pages/Form";
 import Success from "./pages/Success";
+import Verify from "./pages/Verify";
 import AdminPage from "../AdminPage/src/App"; // Importe o AdminPage
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
+          <Route path="/verify" element={<Verify />} />
           <Route path="/form" element={<Form />} />
           <Route path="/success" element={<Success />} />
           <Route path="/index" element={<Navigate to="/" replace />} />

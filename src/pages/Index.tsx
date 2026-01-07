@@ -66,9 +66,9 @@ const Index = () => {
         return;
       }
 
-      // Salva o email no sessionStorage e redireciona para o formulário
+      // Salva o email no sessionStorage e redireciona para verificação
       sessionStorage.setItem("userEmail", email);
-      navigate("/form");
+      navigate("/verify");
     } catch (error) {
       toast({
         variant: "destructive",
