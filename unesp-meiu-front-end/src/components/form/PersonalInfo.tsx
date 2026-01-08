@@ -7,7 +7,7 @@ const PersonalInfo = ({ formData, setFormData }) => {
   const handleChange = (e) => {
     let rawValue = e.target.value;
 
-    if (e.target.name != "name")
+    if (e.target.name !== "name" && e.target.name !== "rg")
       rawValue = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
     
     setFormData({ ...formData, [e.target.name]: rawValue });

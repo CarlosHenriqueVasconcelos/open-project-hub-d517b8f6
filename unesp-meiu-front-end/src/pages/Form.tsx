@@ -11,6 +11,7 @@ import ScoresInfo from "@/components/form/ScoresInfo";
 import ConsentInfo from "@/components/form/ConsentInfo";
 import { useToast } from "@/hooks/use-toast";
 import { API_CONFIG } from "@/config/api";
+import { SCORE_LIMITS } from "@/config/scoreLimits";
 
 const Form = () => {
   const [step, setStep] = useState(1);
@@ -44,11 +45,13 @@ const Form = () => {
       period: "Período",
       campus: "Campus",
       file_registration: "Documento de Registro",
+      cursarUmaOuDuas: "Cursar ambas as disciplinas",
       agreed: "Consentimento",
     };
 
     for (const [field, label] of Object.entries(requiredFields)) {
-      if (!data[field]) {
+      const value = data[field];
+      if (value === undefined || value === null || value === "") {
         throw new Error(`O campo ${label} é obrigatório`);
       }
     }
@@ -58,6 +61,16 @@ const Form = () => {
 
   const formatFormDataForSubmission = (data) => {
     const formattedData = new FormData();
+    const normalizedScores = { ...(data.studentRegistrationScore || {}) };
+    Object.keys(SCORE_LIMITS).forEach((key) => {
+      if (key === "performanceCoefficient") {
+        return;
+      }
+      const value = normalizedScores[key];
+      if (value === "" || value === undefined || value === null || Number.isNaN(value)) {
+        normalizedScores[key] = 0;
+      }
+    });
 
     // Adiciona os campos JSON individualmente
     Object.entries({
@@ -75,6 +88,7 @@ const Form = () => {
       "subject": data.subject,
       "choicePriority": data.choicePriority,
       "doesNotMeetRequirements": data.doesNotMeetRequirements,
+      "cursarUmaOuDuas": data.cursarUmaOuDuas,
       "semester": data.semester,
       "skillsDescription": data.skillsDescription,
       "agreed": data.agreed
@@ -90,7 +104,7 @@ const Form = () => {
     }
 
     if (data.studentRegistrationScore) {
-      formattedData.append("studentRegistrationScore", JSON.stringify(data.studentRegistrationScore));
+      formattedData.append("studentRegistrationScore", JSON.stringify(normalizedScores));
     }
 
     // Adiciona o arquivo, se existir
@@ -133,6 +147,38 @@ const Form = () => {
 
   const handleNext = () => {
     if (step < totalSteps) {
+      if (step === 6) {
+        const scores = formData.studentRegistrationScore || {};
+        const errors = Object.entries(SCORE_LIMITS).filter(([field, limit]) => {
+          const value = scores[field];
+          const isEmpty =
+            value === "" || value === undefined || value === null || Number.isNaN(value);
+          if (isEmpty) {
+            return field === "performanceCoefficient";
+          }
+
+          if (value < limit.min) {
+            return true;
+          }
+
+          if (limit.max !== null && value > limit.max) {
+            return true;
+          }
+
+          return false;
+        });
+
+        if (errors.length > 0) {
+          toast({
+            variant: "destructive",
+            title: "Pontuação inválida",
+            description:
+              "Revise os campos da etapa de pontuação. Alguns valores estão fora do limite permitido.",
+          });
+          return;
+        }
+      }
+
       setStep(step + 1);
       window.scrollTo(0, 0);
     }

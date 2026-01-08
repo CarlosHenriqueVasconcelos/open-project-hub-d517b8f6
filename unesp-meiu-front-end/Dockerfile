@@ -12,6 +12,10 @@ RUN npm install --legacy-peer-deps --force
 # Copie o código-fonte
 COPY . .
 
+# Permite injetar a base da API no build do Vite
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Configure variáveis de ambiente
 ENV NODE_OPTIONS=--openssl-legacy-provider
 

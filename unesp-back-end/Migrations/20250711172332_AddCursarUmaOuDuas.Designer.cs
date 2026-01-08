@@ -393,7 +393,7 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("SMALLINT")
                         .HasColumnName("does_not_meet_requirements");
 
-                    b.Property<ulong>("EnrolledInIndustry4_0")
+                    b.Property<ulong?>("EnrolledInIndustry4_0")
                         .HasColumnType("BIT")
                         .HasColumnName("enrolled_in_industry_4_0");
 
@@ -402,11 +402,10 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnName("file_path");
 
                     b.Property<DateTime?>("FirstMeetingDate")
-                        .IsRequired()
                         .HasColumnType("DATE")
                         .HasColumnName("first_meeting_date");
 
-                    b.Property<ulong>("Presencial")
+                    b.Property<ulong?>("Presencial")
                         .HasColumnType("BIT")
                         .HasColumnName("presencial");
 

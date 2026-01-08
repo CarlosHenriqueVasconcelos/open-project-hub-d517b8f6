@@ -11,6 +11,11 @@ import AdminPage from "../AdminPage/src/App"; // Importe o AdminPage
 
 const queryClient = new QueryClient();
 
+const RequireAuth = ({ children }: { children: JSX.Element }) => {
+  const isAuthed = !!sessionStorage.getItem("userEmail");
+  return isAuthed ? children : <Navigate to="/" replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -21,8 +26,22 @@ const App = () => (
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/verify" element={<Verify />} />
-          <Route path="/form" element={<Form />} />
-          <Route path="/success" element={<Success />} />
+          <Route
+            path="/form"
+            element={
+              <RequireAuth>
+                <Form />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/success"
+            element={
+              <RequireAuth>
+                <Success />
+              </RequireAuth>
+            }
+          />
           <Route path="/index" element={<Navigate to="/" replace />} />
 
           {/* admin Routes */}

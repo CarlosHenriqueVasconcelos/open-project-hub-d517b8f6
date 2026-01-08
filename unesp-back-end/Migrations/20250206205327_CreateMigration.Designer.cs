@@ -389,7 +389,7 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("SMALLINT")
                         .HasColumnName("does_not_meet_requirements");
 
-                    b.Property<ulong>("EnrolledInIndustry4_0")
+                    b.Property<ulong?>("EnrolledInIndustry4_0")
                         .HasColumnType("BIT")
                         .HasColumnName("enrolled_in_industry_4_0");
 
@@ -398,11 +398,11 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("VARCHAR(200)")
                         .HasColumnName("file_path");
 
-                    b.Property<DateTime>("FirstMeetingDate")
+                    b.Property<DateTime?>("FirstMeetingDate")
                         .HasColumnType("DATE")
                         .HasColumnName("first_meeting_date");
 
-                    b.Property<ulong>("Presencial")
+                    b.Property<ulong?>("Presencial")
                         .HasColumnType("BIT")
                         .HasColumnName("presencial");
 
@@ -502,8 +502,8 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("INT")
                         .HasColumnName("technology_certification_score");
 
-                    b.Property<int>("VolunteeringScore")
-                        .HasColumnType("INT")
+                    b.Property<float>("VolunteeringScore")
+                        .HasColumnType("FLOAT")
                         .HasColumnName("volunteering_score");
 
                     b.HasKey("Id");

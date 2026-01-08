@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - be_plataforma_gestao_ia
+      - fe_plataforma_gestao_ia
+    networks:
+      - rede_plataforma_gestao
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - nginx
+    networks:
+      - rede_plataforma_gestao
+
+  mysql_plataforma_gestao_ia:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: plat@forma_i@_2024
+    ports:
+      - "127.0.0.1:3306:3306"
+    networks:
+      - rede_plataforma_gestao
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  be_plataforma_gestao_ia:
+    image: carlosvasc0n/plataforma-backend:latest
+    depends_on:
+      mysql_plataforma_gestao_ia:
+        condition: service_healthy
+    ports:
+      - "5058:80"
+    environment:
+      MYSQL_HOST: mysql_plataforma_gestao_ia 
+      MYSQL_USER: root
+      MYSQL_PASSWORD: plat@forma_i@_2024
+      MYSQL_DATABASE: PlataformaGestao
+      BD_ENVIRONMENT: Docker
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+      - rede_plataforma_gestao
+
+  fe_plataforma_gestao_ia:
+    image: carlosvasc0n/plataforma-frontend:latest
+    depends_on:
+      - be_plataforma_gestao_ia
+    ports:
+      - "127.0.0.1:3000:80"
+    networks:
+      - rede_plataforma_gestao
+    environment:
+      - VITE_API_URL=https://meiu.pg.utfpr.edu.br/api
+
+networks:
+  rede_plataforma_gestao:
+    name: rede_plataforma_gestao
+    driver: bridge
+
+volumes:
+  mysql_data:

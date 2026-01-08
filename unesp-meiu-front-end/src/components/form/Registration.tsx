@@ -10,14 +10,27 @@ const Registration = ({ formData, setFormData }) => {
         }
     }, [formData.subjects]);
 
-    const handleCheckboxChange = (event, group) => {
+    const MAX_SUBJECTS = 2;
+    const CONFLICTS = {
+        1: [32],
+        32: [1],
+    };
+
+    const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
         const parsedValue = parseInt(value, 10);
 
         let updatedSubjects = [...selectedSubjects];
         if (checked) {
-            if (group === "exclusive") {
-                updatedSubjects = updatedSubjects.filter((v) => v !== 1 && v !== 2);
+            if (updatedSubjects.length >= MAX_SUBJECTS) {
+                alert("Você pode selecionar no máximo duas matérias.");
+                return;
+            }
+
+            const conflicts = CONFLICTS[parsedValue] || [];
+            if (conflicts.some((conflict) => updatedSubjects.includes(conflict))) {
+                alert("Essas duas matérias ocorrem no mesmo dia e não podem ser selecionadas juntas.");
+                return;
             }
             updatedSubjects.push(parsedValue);
         } else {
@@ -42,10 +55,12 @@ const Registration = ({ formData, setFormData }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        const normalizedValue =
+            name === "cursarUmaOuDuas" ? value === "true" : value;
         // Atualiza o estado para refletir a seleção do rádio
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value, // Atualiza o valor selecionado para o campo 'subject'
+            [name]: normalizedValue, // Atualiza o valor selecionado para o campo
         }));
     };
 
@@ -78,16 +93,18 @@ const Registration = ({ formData, setFormData }) => {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-            <FormField
-                    label="Selecionar até três matérias, escolha apenas uma entre as matérias: Engineering Design Process e Design de Soluções para Problemas Reais"
+                <FormField
+                    label="Selecionar até duas matérias. Não é permitido selecionar Engineering Design Process e Manutenção 4.0 - Desafios Colaborativos ao mesmo tempo."
                     required
                 >
                     <div className="space-y-2">
                         {[
-                            { id: "Engineering", label: "Engineering Design Process", value: "1", group: "exclusive" },
-                            { id: "Design", label: "Design de Soluções Reais", value: "2", group: "exclusive" },
-                            { id: "Industry", label: "Industry 4.0 e 5.0", value: "4", group: "general" },
-                            { id: "Engenharia", label: "Engenharia Colaborativa", value: "8", group: "general" },
+                            { id: "Engineering", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa", value: "1" },
+                            { id: "Industry", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa", value: "4" },
+                            { id: "Design", label: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana", value: "2" },
+                            { id: "Engenharia", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo", value: "8" },
+                            { id: "Processo", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina", value: "16" },
+                            { id: "Manutencao", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco", value: "32" },
                         ].map((subject) => (
                             <div key={subject.id} className="flex items-center space-x-2">
                                 <input
@@ -95,9 +112,9 @@ const Registration = ({ formData, setFormData }) => {
                                     id={subject.id}
                                     value={subject.value}
                                     checked={selectedSubjects.includes(parseInt(subject.value, 10))}
-                                    onChange={(event) => handleCheckboxChange(event, subject.group)}
+                                    onChange={handleCheckboxChange}
                                     disabled={
-                                        selectedSubjects.length >= 3 &&
+                                        selectedSubjects.length >= MAX_SUBJECTS &&
                                         !selectedSubjects.includes(parseInt(subject.value, 10))
                                     }
                                     className="h-4 w-4"
@@ -116,10 +133,12 @@ const Registration = ({ formData, setFormData }) => {
                 >
                     <div className="space-y-2">
                         {[
-                            { id: "EngineeringchoicePriority", label: "Engineering Design Process", value: "1" },
-                            { id: "DesignchoicePriority", label: "Design de Soluções Reais", value: "2" },
-                            { id: "Industry4", label: "Industry 4.0 e 5.0", value: "3" },
-                            { id: "EngColaborativa", label: "Engenharia Colaborativa", value: "4" },
+                            { id: "EngineeringchoicePriority", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa", value: "1" },
+                            { id: "Industry4", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa", value: "2" },
+                            { id: "DesignchoicePriority", label: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana", value: "3" },
+                            { id: "EngColaborativa", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo", value: "4" },
+                            { id: "ProcessochoicePriority", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina", value: "5" },
+                            { id: "ManutencaochoicePriority", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco", value: "6" },
                         ].map((choicePriority_type) => (
                             <div key={choicePriority_type.id} className="flex items-center space-x-2">
                                 <input
@@ -133,6 +152,33 @@ const Registration = ({ formData, setFormData }) => {
                                 />
                                 <label htmlFor={choicePriority_type.id} className="text-sm text-gray-700">
                                     {choicePriority_type.label}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </FormField>
+
+                <FormField
+                    label="Caso tenha escolhido concorrer em ambas as disciplinas, deseja cursar as duas?"
+                    required
+                >
+                    <div className="space-y-2">
+                        {[
+                            { id: "cursarUmaOuDuasSim", label: "Sim", value: "true" },
+                            { id: "cursarUmaOuDuasNao", label: "Não", value: "false" },
+                        ].map((option) => (
+                            <div key={option.id} className="flex items-center space-x-2">
+                                <input
+                                    type="radio"
+                                    id={option.id}
+                                    name="cursarUmaOuDuas"
+                                    value={option.value}
+                                    checked={formData.cursarUmaOuDuas === (option.value === "true")}
+                                    onChange={handleChange}
+                                    className="h-4 w-4"
+                                />
+                                <label htmlFor={option.id} className="text-sm text-gray-700">
+                                    {option.label}
                                 </label>
                             </div>
                         ))}

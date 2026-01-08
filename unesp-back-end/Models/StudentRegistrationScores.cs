@@ -11,7 +11,7 @@ namespace PlataformaGestaoIA.Models
         public int? InstitutionalMonitoringProgramScore { get; set; }
         public int? JuniorEnterpriseExperienceScore { get; set; }
         public int? ProjectInTechnologicalHotelScore { get; set; }
-        public int? VolunteeringScore { get; set; }
+        public float? VolunteeringScore { get; set; }
         public int? HighGradeDisciplineScore { get; set; }
         public int? CertificationCoursesScore { get; set; }
         public int? HighGradeCoursesScore { get; set; }

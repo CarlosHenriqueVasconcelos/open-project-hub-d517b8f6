@@ -1,0 +1,51 @@
+section,front_field,back_model_property,db_table,db_column,db_type,required_in_db,status,notes,min_value,max_value
+student,student.name,Student.Name,Student,name,NVARCHAR(80),yes,mapped,PersonalInfo,,
+student,student.ra,Student.RA,Student,ra,VARCHAR(10),yes,mapped,PersonalInfo,,
+student,student.cpf,Student.CPF,Student,cpf,VARCHAR(11),no,mapped,PersonalInfo,,
+student,student.rg,Student.RG,Student,rg,VARCHAR(15),no,mapped,PersonalInfo,,
+student,student.cellphone,Student.Cellphone,Student,cellphone,VARCHAR(15),no,mapped,PersonalInfo,,
+student,student.currentCourse.mode,CurrentCourse.Mode,CurrentCourse,Mode,longtext,yes,mapped,AcademicInfo,,
+student,student.currentCourse.description,CurrentCourse.Description,CurrentCourse,Description,longtext,yes,mapped,AcademicInfo,,
+student,student.currentCourse.period,CurrentCourse.Period,CurrentCourse,Period,longtext,yes,mapped,AcademicInfo,,
+student,student.currentCourse.campus,CurrentCourse.Campus,CurrentCourse,Campus,longtext,yes,mapped,AcademicInfo,,
+user,student.user.email,User.Email,User,email,VARCHAR(160),yes,mapped,PersonalInfo,,
+user,,User.Name,User,name,NVARCHAR(80),no,db_only,not sent by form,,
+user,,User.Slug,User,slug,VARCHAR(80),no,db_only,generated in backend,,
+user,,User.PasswordHash,User,password_hash,VARCHAR(255),no,db_only,auth data not in form,,
+user,,User.Image,User,Image,longtext,no,db_only,not sent by form,,
+user,,User.Bio,User,Bio,longtext,no,db_only,not sent by form,,
+registration,registrationDate,StudentRegistration.RegistrationDate,StudentRegistration,registration_date,DATE,yes,mapped,Form.tsx sets ISO date,,
+registration,subject,StudentRegistration.Subject,StudentRegistration,subject,SMALLINT,yes,mapped,Registration step,,
+registration,choicePriority,StudentRegistration.ChoicePriority,StudentRegistration,choice_priority,SMALLINT,yes,mapped,Registration step,,
+registration,doesNotMeetRequirements,StudentRegistration.DoesNotMeetRequirements,StudentRegistration,does_not_meet_requirements,SMALLINT,yes,mapped,Registration step,,
+registration,cursarUmaOuDuas,StudentRegistration.CursarUmaOuDuas,StudentRegistration,cursar_uma_ou_duas,SMALLINT,yes,mapped,Registration step,0,1
+registration,semester,StudentRegistration.Semester,StudentRegistration,semester,VARCHAR(7),yes,mapped,Registration step,,
+registration,skillsDescription,StudentRegistration.SkillsDescription,StudentRegistration,skills_description,NVARCHAR(100),no,mapped,Skills step,,
+registration,file_registration,StudentRegistration.FilePath,StudentRegistration,file_path,VARCHAR(200),no,mapped,file upload saved by backend,,
+registration,,StudentRegistration.EnrolledInIndustry4_0,StudentRegistration,enrolled_in_industry_4_0,BIT,no,db_only,optional - no input in form,0,1
+registration,,StudentRegistration.Presencial,StudentRegistration,presencial,BIT,no,db_only,optional - no input in form,0,1
+registration,,StudentRegistration.FirstMeetingDate,StudentRegistration,first_meeting_date,DATE,no,db_only,optional - no input in form,,
+registration,,StudentRegistration.StudentRegistrationScoreId,StudentRegistration,StudentRegistrationScoreId,int,no,db_only,assigned by backend,,
+registration,,StudentRegistration.StudentId,StudentRegistration,StudentId,int,no,db_only,assigned by backend,,
+registration,,StudentRegistration.id_student,StudentRegistration,id_student,int,no,db_only,assigned by backend,,
+registration,agreed,,,,boolean,n/a,front_only,used only in UI,,
+scores,studentRegistrationScore.performanceCoefficient,StudentRegistrationScore.PerformanceCoefficient,StudentRegistrationScores,performance_coefficient,FLOAT,yes,mapped,"CR (1 a 2, float)",1,2
+scores,studentRegistrationScore.scientificInitiationProgramScore,StudentRegistrationScore.ScientificInitiationProgramScore,StudentRegistrationScores,scientific_initiation_program_score,INT,no,mapped,"02 pontos a cada 6 meses (max 06)",0,6
+scores,studentRegistrationScore.institutionalMonitoringProgramScore,StudentRegistrationScore.InstitutionalMonitoringProgramScore,StudentRegistrationScores,institutional_monitoring_program_score,INT,no,mapped,"03 pontos a cada semestre (max 06)",0,6
+scores,studentRegistrationScore.juniorEnterpriseExperienceScore,StudentRegistrationScore.JuniorEnterpriseExperienceScore,StudentRegistrationScores,junior_enterprise_experience_score,INT,no,mapped,"01 ponto a cada 12 meses (max 02)",0,2
+scores,studentRegistrationScore.projectInTechnologicalHotelScore,StudentRegistrationScore.ProjectInTechnologicalHotelScore,StudentRegistrationScores,project_in_technological_hotel_score,INT,no,mapped,"01 ponto a cada 12 meses (max 02)",0,2
+scores,studentRegistrationScore.internshipEmploymentScore,StudentRegistrationScore.InternshipEmploymentScore,StudentRegistrationScores,internship_employment_score,INT,no,mapped,"02 pontos a cada 100 horas (max 08)",0,8
+scores,studentRegistrationScore.volunteeringScore,StudentRegistrationScore.VolunteeringScore,StudentRegistrationScores,volunteering_score,FLOAT,no,mapped,"0,5 ponto por mes (max 02)",0,2
+scores,studentRegistrationScore.highGradeDisciplineScore,StudentRegistrationScore.HighGradeDisciplineScore,StudentRegistrationScores,high_grade_discipline_score,INT,no,mapped,"Nota > 9,0 (30 por disciplina, sem max)",0,
+scores,studentRegistrationScore.highGradeCoursesScore,StudentRegistrationScore.HighGradeCoursesScore,StudentRegistrationScores,high_grade_courses_score,INT,no,mapped,"Notas 6,0 a 8,0 (02 por disciplina, max 06)",0,6
+scores,studentRegistrationScore.technologyCertificationScore,StudentRegistrationScore.TechnologyCertificationScore,StudentRegistrationScores,technology_certification_score,INT,no,mapped,"Certificados (02 por curso, max 06)",0,6
+scores,studentRegistrationScore.lowLevelTechScore,StudentRegistrationScore.LowLevelTechScore,StudentRegistrationScores,low_level_tech_score,INT,no,mapped,"Notas > 8,0 (08 por disciplina, max 24)",0,24
+scores,studentRegistrationScore.aiProjectsScore,StudentRegistrationScore.AIProjectsScore,StudentRegistrationScores,ai_projects_score,INT,no,mapped,"Projetos (10 por projeto, max 30)",0,30
+scores,studentRegistrationScore.scoreCoursesDescription,StudentRegistrationScore.ScoreCoursesDescription,StudentRegistrationScores,score_courses_description,NVARCHAR(100),no,mapped,Descrição dos cursos,,
+scores,,StudentRegistrationScore.CertificationCoursesScore,StudentRegistrationScores,certification_courses_score,INT,no,db_only,no input in form,,
+skills,studentSkills[].skill.name,Skill.Name,Skill,name,NVARCHAR(100),yes,mapped,Skills step,,
+skills,studentSkills[].level,StudentRegistrationSkill.Level,StudentRegistrationSkill,level,SMALLINT,yes,mapped,Skills step,,
+skills,,Skill.Tag,Skill,tag,NVARCHAR(100),yes,db_only,generated in backend,,
+skills,,Skill.IsSoftSkill,Skill,is_soft_skill,BIT,yes,db_only,loaded from DB,,
+skills,,StudentRegistrationSkill.id_skill,StudentRegistrationSkill,id_skill,int,yes,db_only,assigned by backend,,
+skills,,StudentRegistration_RegistrationSkill.semester,StudentRegistration_RegistrationSkill,semester,VARCHAR(7),no,db_only,join table,,

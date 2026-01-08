@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  mysql_plataforma_gestao_ia:
+    image: mysql:8.0
+    container_name: mysql_plataforma_gestao_ia
+    environment:
+      MYSQL_ROOT_PASSWORD: plat@forma_i@_2024
+    ports:
+      - "3306:3306"
+    networks:
+      - rede_plataforma_gestao
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  be_plataforma_gestao_ia:
+    build:
+      context: ./unesp-back-end
+      dockerfile: Dockerfile
+    container_name: be_plataforma_gestao_ia
+    depends_on:
+      mysql_plataforma_gestao_ia:
+        condition: service_healthy
+    ports:
+      - "5058:80"
+    environment:
+      MYSQL_HOST: mysql_plataforma_gestao_ia
+      MYSQL_USER: root
+      MYSQL_PASSWORD: plat@forma_i@_2024
+      MYSQL_DATABASE: PlataformaGestao
+      BD_ENVIRONMENT: Docker
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Server=mysql_plataforma_gestao_ia;Port=3306;Database=PlataformaGestao;Uid=root;Pwd=plat@forma_i@_2024;charset=utf8mb4;
+    networks:
+      - rede_plataforma_gestao
+
+  fe_plataforma_gestao_ia:
+    build:
+      context: ./unesp-meiu-front-end
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5058/api/v1
+    container_name: fe_plataforma_gestao_ia
+    depends_on:
+      - be_plataforma_gestao_ia
+    ports:
+      - "3000:80"
+    networks:
+      - rede_plataforma_gestao
+
+networks:
+  rede_plataforma_gestao:
+    name: rede_plataforma_gestao
+    driver: bridge
+
+volumes:
+  mysql_data:

@@ -58,10 +58,12 @@ const Success = () => {
 
     // Mapeamento dos valores das matérias
     const subjectsMap = {
-      1: "Engineering Design Process",
-      2: "Design de Soluções Reais",
-      4: "Industry 4.0 e 5.0",
-      8: "Engenharia Colaborativa",
+      1: "Engineering Design Process (ENG01B) - Campus Ponta Grossa",
+      2: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana",
+      4: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa",
+      8: "Engenharia Colaborativa (OPETH003) - Campus Toledo",
+      16: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina",
+      32: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco",
     };
 
     // Obtém o valor armazenado das disciplinas selecionadas
@@ -146,54 +148,8 @@ const Success = () => {
     doc.text(jsonLines, 20, yPosition);
     doc.setFontSize(12); // Restaura o tamanho da fonte
 
-    // Adiciona o documento enviado pelo usuário se existir
-    if (formData.file_registration && formData.file_registration instanceof File) {
-      try {
-        const fileReader = new FileReader();
-        
-        await new Promise<void>((resolve, reject) => {
-          fileReader.onload = async function() {
-            try {
-              const existingPdfBytes = fileReader.result as ArrayBuffer;
-              const existingPdf = new Uint8Array(existingPdfBytes);
-              
-              // Cria um novo documento combinando o atual com o enviado
-              const newDoc = new jsPDF();
-              
-              // Primeiro adiciona todas as páginas do documento atual
-              for (let i = 1; i <= doc.getNumberOfPages(); i++) {
-                if (i > 1) newDoc.addPage();
-                newDoc.setPage(i);
-                newDoc.addPage();
-              const pdfOutput = doc.output('arraybuffer');
-              newDoc.addFileToVFS(`page${i}.pdf`, new Uint8Array(pdfOutput).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-              }
-              
-              // Adiciona o documento enviado pelo usuário
-              newDoc.addPage();
-              const uploadedBytes = new Uint8Array(existingPdfBytes);
-              newDoc.addFileToVFS('uploaded.pdf', uploadedBytes.reduce((data, byte) => data + String.fromCharCode(byte), ''));
-              
-              // Salva o documento combinado
-              newDoc.save("confirmacao-inscricao.pdf");
-              resolve();
-            } catch (error) {
-              reject(error);
-            }
-          };
-          
-          fileReader.onerror = reject;
-          fileReader.readAsArrayBuffer(formData.file_registration);
-        });
-      } catch (error) {
-        console.error('Erro ao combinar PDFs:', error);
-        // Se houver erro na combinação, salva apenas o documento principal
-        doc.save("confirmacao-inscricao.pdf");
-      }
-    } else {
-      // Se não houver documento para combinar, salva apenas o documento principal
-      doc.save("confirmacao-inscricao.pdf");
-    }
+    // Salva apenas o PDF de confirmação com os dados da inscrição.
+    doc.save("confirmacao-inscricao.pdf");
   };
 
   return (

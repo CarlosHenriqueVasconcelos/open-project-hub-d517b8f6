@@ -43,12 +43,10 @@ namespace PlataformaGestaoIA.DataContext.Mappings
                 .HasColumnType("SMALLINT");
 
             builder.Property(x => x.EnrolledInIndustry4_0)
-                .IsRequired()
                 .HasColumnName("enrolled_in_industry_4_0")
                 .HasColumnType("BIT");
 
             builder.Property(x => x.Presencial)
-                .IsRequired()
                 .HasColumnName("presencial")
                 .HasColumnType("BIT");
 
@@ -63,7 +61,6 @@ namespace PlataformaGestaoIA.DataContext.Mappings
                 .HasColumnType("SMALLINT");
 
             builder.Property(x => x.FirstMeetingDate)
-                .IsRequired()
                 .HasColumnName("first_meeting_date")
                 .HasColumnType("DATE");
 

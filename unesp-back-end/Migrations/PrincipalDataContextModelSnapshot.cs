@@ -390,7 +390,7 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("SMALLINT")
                         .HasColumnName("does_not_meet_requirements");
 
-                    b.Property<ulong>("EnrolledInIndustry4_0")
+                    b.Property<ulong?>("EnrolledInIndustry4_0")
                         .HasColumnType("BIT")
                         .HasColumnName("enrolled_in_industry_4_0");
 
@@ -399,11 +399,10 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnName("file_path");
 
                     b.Property<DateTime?>("FirstMeetingDate")
-                        .IsRequired()
                         .HasColumnType("DATE")
                         .HasColumnName("first_meeting_date");
 
-                    b.Property<ulong>("Presencial")
+                    b.Property<ulong?>("Presencial")
                         .HasColumnType("BIT")
                         .HasColumnName("presencial");
 
@@ -453,42 +452,34 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AIProjectsScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("ai_projects_score");
 
                     b.Property<int?>("CertificationCoursesScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("certification_courses_score");
 
                     b.Property<int?>("HighGradeCoursesScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("high_grade_courses_score");
 
                     b.Property<int?>("HighGradeDisciplineScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("high_grade_discipline_score");
 
                     b.Property<int?>("InstitutionalMonitoringProgramScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("institutional_monitoring_program_score");
 
                     b.Property<int?>("InternshipEmploymentScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("internship_employment_score");
 
                     b.Property<int?>("JuniorEnterpriseExperienceScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("junior_enterprise_experience_score");
 
                     b.Property<int?>("LowLevelTechScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("low_level_tech_score");
 
@@ -498,12 +489,10 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnName("performance_coefficient");
 
                     b.Property<int?>("ProjectInTechnologicalHotelScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("project_in_technological_hotel_score");
 
                     b.Property<int?>("ScientificInitiationProgramScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("scientific_initiation_program_score");
 
@@ -512,13 +501,11 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnName("score_courses_description");
 
                     b.Property<int?>("TechnologyCertificationScore")
-                        .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("technology_certification_score");
 
-                    b.Property<int?>("VolunteeringScore")
-                        .IsRequired()
-                        .HasColumnType("INT")
+                    b.Property<float?>("VolunteeringScore")
+                        .HasColumnType("FLOAT")
                         .HasColumnName("volunteering_score");
 
                     b.HasKey("Id");
