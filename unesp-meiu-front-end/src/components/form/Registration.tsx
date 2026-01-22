@@ -129,7 +129,7 @@ const Registration = ({ formData, setFormData }) => {
 
 
                 <FormField
-                    label="Escolher prioridade - Caso tenha escolhido concorrer em Ambas as disciplinas na questão acima, escolha a sua preferência caso seja selecionado nas duas."
+                    label="Escolher prioridade - Selecionar Matéria de maior prioridade, indepentende de ter selecionado uma ou duas matérias para candidatura"
                 >
                     <div className="space-y-2">
                         {[
@@ -159,7 +159,7 @@ const Registration = ({ formData, setFormData }) => {
                 </FormField>
 
                 <FormField
-                    label="Caso tenha escolhido concorrer em ambas as disciplinas, deseja cursar as duas?"
+                    label="Caso tenha selecionado mais de uma matéria para candidatura, tem interesse de cursar ambas ?"
                     required
                 >
                     <div className="space-y-2">
@@ -185,31 +185,6 @@ const Registration = ({ formData, setFormData }) => {
                     </div>
                 </FormField>
 
-                <FormField
-                    label="O Regulamento da Organização Didático-Pedagógica dos Cursos De Graduação do UTFPR permite: (i) matrícula em até 3 disciplinas de enriquecimento curricular, (ii) carga horária máxima igual a do período com maior carga horária na matriz curricular, somada a 90 (noventa) horas, não excedendo um máximo de 600 (seiscentas) horas no semestre, (iii) matrícula em disciplinas cujos horários não sejam sobrepostos. Caso você seja selecionado no presente edital mas não atenda a um dos requisitos (i), (ii) ou (iii), a sua opção é:"
-                >
-                    <div className="space-y-2">
-                        {[
-                            { id: "doesNotMeetRequirements1", label: "Desistência da matrícula em uma ou mais disciplinas nas quais foi selecionado no presente edital", value: "0" },
-                            { id: "doesNotMeetRequirements2", label: "Cancelamento da matrícula em uma ou mais disciplinas em que se encontra matriculado, para que seja possível a matrícula em uma ou mais disciplinas nas quais foi selecionado no presente edital", value: "1" },
-                        ].map((doesNotMeetRequirements_type) => (
-                            <div key={doesNotMeetRequirements_type.id} className="flex items-center space-x-2">
-                                <input
-                                    type="radio"
-                                    id={doesNotMeetRequirements_type.id}
-                                    name="doesNotMeetRequirements" // Todos têm o mesmo 'name' para que apenas um seja selecionado
-                                    value={doesNotMeetRequirements_type.value}
-                                    checked={formData.doesNotMeetRequirements === doesNotMeetRequirements_type.value} // Verifica se a opção foi selecionada
-                                    onChange={handleChange} // Atualiza o estado com a opção selecionada
-                                    className="h-4 w-4"
-                                />
-                                <label htmlFor={doesNotMeetRequirements_type.id} className="text-sm text-gray-700">
-                                    {doesNotMeetRequirements_type.label}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </FormField>
             </div>
         </div>
     );

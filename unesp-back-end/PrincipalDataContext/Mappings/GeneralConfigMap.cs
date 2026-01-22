@@ -31,6 +31,14 @@ namespace PlataformaGestaoIA.DataContext.Mappings
                 .IsRequired()
                 .HasColumnName("config_consent")
                 .HasColumnType("LONGTEXT");
+
+            builder.Property(x => x.Stage)
+                .HasColumnName("config_stage")
+                .HasColumnType("VARCHAR(20)");
+
+            builder.Property(x => x.ConfirmationDeadline)
+                .HasColumnName("config_confirmation_deadline")
+                .HasColumnType("DATETIME");
         }
     }
 }

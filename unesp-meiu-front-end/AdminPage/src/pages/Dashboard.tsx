@@ -33,16 +33,18 @@ import RegistrationsChart from "../components/RegistrationsChart";
 import SkillsDistributionChart from "../components/SkillsDistributionChart";
 import StudentSearch from "../components/StudentSearch";
 import PDFViewer from "../components/PDFViewer";
-import { StudentRegistration } from "../types";
+import { RankingEntry, StudentRegistration } from "../types";
 import { API_BASE_URL } from "../config/api";
 
 
 const ITEMS_PER_PAGE = 5;
+const SUBJECTS = [1, 2, 4, 8, 16, 32];
 
 const Dashboard = () => {
   const [selectedSemester, setSelectedSemester] = useState(getCurrentSemester());
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
   const semesterOptions = generateSemesterOptions();
 
   const { data: registrations, isLoading: isLoadingRegistrations } = useQuery({
@@ -94,39 +96,100 @@ const Dashboard = () => {
     return (totalScore / filteredRegistrations.length).toFixed(2);
   };
 
-  const generateCSV = () => {
-    if (!filteredRegistrations || !skills) return;
+  const generateCSV = async () => {
+    if (!skills) return;
+    setIsExporting(true);
+    try {
+      const [registrationsResponse, ...rankingResponses] = await Promise.all([
+        getStudentRegistrations(1, 100000),
+        ...SUBJECTS.map((subject) =>
+          fetch(`${API_BASE_URL}/rankings?subject=${subject}&semester=${encodeURIComponent(selectedSemester)}`).then(
+            (response) => {
+              if (!response.ok) {
+                throw new Error("Falha ao buscar classificação.");
+              }
+              return response.json();
+            }
+          )
+        ),
+      ]);
 
-    const headers = ['Nome do aluno', 'RA', 'Curso', 'Projetos tentados', 'Pode comparecer'];
-    const skillHeaders = skills.map(skill => skill.name);
-    const allHeaders = [...headers, ...skillHeaders].join(',');
+      const registrations = (registrationsResponse.data || []).filter(
+        (registration: StudentRegistration) => registration.semester === selectedSemester
+      );
 
-    const rows = filteredRegistrations.map((registration) => {
-      const skillLevels: { [key: number]: number } = {};
-      registration.studentSkills.forEach((ss) => {
-        if (ss.skill.id) {
-          skillLevels[ss.skill.id] = ss.level;
+      const registrationByStudentId = new Map<number, StudentRegistration>();
+      registrations.forEach((registration: StudentRegistration) => {
+        registrationByStudentId.set(registration.student.id, registration);
+      });
+
+      const allRankings = rankingResponses.flatMap((response) => response.data || []) as RankingEntry[];
+      const classifiedRankings = allRankings.filter(
+        (entry) => entry.classification === "classificado"
+      );
+
+      const classifiedMap = new Map<number, { entry: RankingEntry; subjects: Set<number> }>();
+      classifiedRankings.forEach((entry) => {
+        const studentId = entry.student?.id;
+        if (!studentId) return;
+        const existing = classifiedMap.get(studentId);
+        if (existing) {
+          existing.subjects.add(entry.subjectValue);
+        } else {
+          classifiedMap.set(studentId, { entry, subjects: new Set([entry.subjectValue]) });
         }
       });
 
-      return [
-        registration.student.name,
-        registration.student.ra,
-        registration.student.currentCourse?.description || 'N/A',
-        registration.subject === 2 ? '2' : '1',
-        registration.presencial ? 'Sim' : 'Não',
-        ...skills.map(skill => skillLevels[skill.id] || '0')
-      ].join(',');
-    });
+      const headers = [
+        "Nome do aluno",
+        "RA",
+        "Email",
+        "Curso",
+        "Campus",
+        "Celular",
+        "Periodo",
+        "Projetos tentados",
+      ];
+      const skillHeaders = skills.map((skill) => skill.name);
+      const allHeaders = [...headers, ...skillHeaders].join(",");
 
-    const csvContent = `${allHeaders}\n${rows.join('\n')}`;
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', `alunos_habilidades_${selectedSemester}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const rows = Array.from(classifiedMap.values()).map(({ entry, subjects }) => {
+        const studentId = entry.student?.id;
+        const registration = studentId ? registrationByStudentId.get(studentId) : undefined;
+        const skillLevels: { [key: number]: number } = {};
+
+        registration?.studentSkills.forEach((ss) => {
+          if (ss.skill.id) {
+            skillLevels[ss.skill.id] = ss.level;
+          }
+        });
+
+        return [
+          entry.student?.name || "",
+          entry.student?.ra || "",
+          entry.student?.email || "",
+          entry.student?.currentCourse?.description || "",
+          entry.student?.currentCourse?.campus || "",
+          entry.student?.cellphone || "",
+          entry.student?.currentCourse?.period || "",
+          subjects.size.toString(),
+          ...skills.map((skill) => skillLevels[skill.id] || "0"),
+        ].join(",");
+      });
+
+      const csvContent = `${allHeaders}\n${rows.join("\n")}`;
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `alunos_classificados_${selectedSemester}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Erro ao gerar CSV:", error);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (isLoadingRegistrations) {
@@ -157,9 +220,13 @@ const Dashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <StudentSearch onSearch={setSearchQuery} />
-          <Button onClick={generateCSV} className="flex items-center gap-2 bg-primary hover:bg-primary/90">
+          <Button
+            onClick={generateCSV}
+            disabled={isExporting}
+            className="flex items-center gap-2 bg-primary hover:bg-primary/90"
+          >
             <Download className="h-4 w-4" />
-            Gerar Planilha de Alunos
+            {isExporting ? "Gerando..." : "Gerar Planilha de Alunos"}
           </Button>
         </div>
       </div>

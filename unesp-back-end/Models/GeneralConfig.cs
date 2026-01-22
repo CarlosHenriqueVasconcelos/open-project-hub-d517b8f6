@@ -11,4 +11,6 @@ public class GeneralConfig
     public string ConfigBody { get; set; }
     public string ConfigEmailDomainAvaliable { get; set; }
     public string ConfigConsent { get; set; }
+    public string? Stage { get; set; }
+    public DateTime? ConfirmationDeadline { get; set; }
 }

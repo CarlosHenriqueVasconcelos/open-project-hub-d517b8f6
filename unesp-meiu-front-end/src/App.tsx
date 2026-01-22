@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Form from "./pages/Form";
 import Success from "./pages/Success";
 import Verify from "./pages/Verify";
+import Confirmation from "./pages/Confirmation";
 import AdminPage from "../AdminPage/src/App"; // Importe o AdminPage
 
 const queryClient = new QueryClient();
@@ -39,6 +40,14 @@ const App = () => (
             element={
               <RequireAuth>
                 <Success />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/confirmacao"
+            element={
+              <RequireAuth>
+                <Confirmation />
               </RequireAuth>
             }
           />

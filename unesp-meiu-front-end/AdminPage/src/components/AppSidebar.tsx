@@ -1,4 +1,4 @@
-import { Home, BookOpen, Boxes, BoxesIcon, PackageCheck } from "lucide-react";
+import { Home, BookOpen, Boxes, PackageCheck, ListOrdered } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
@@ -39,6 +39,11 @@ const menuItems = [
     title: "Configurações Gerais",
     path: "/admin/configs",
     icon: PackageCheck,
+  },
+  {
+    title: "Classificação",
+    path: "/admin/rankings",
+    icon: ListOrdered,
   }
 ];
 

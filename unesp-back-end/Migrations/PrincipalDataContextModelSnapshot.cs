@@ -178,6 +178,10 @@ namespace plataformagestaoiabe.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("ConfirmationDeadline")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("config_confirmation_deadline");
+
                     b.Property<string>("ConfigBody")
                         .IsRequired()
                         .HasColumnType("LONGTEXT")
@@ -197,6 +201,10 @@ namespace plataformagestaoiabe.Migrations
                         .IsRequired()
                         .HasColumnType("LONGTEXT")
                         .HasColumnName("config_header");
+
+                    b.Property<string>("Stage")
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("config_stage");
 
                     b.HasKey("Id");
 
@@ -443,6 +451,78 @@ namespace plataformagestaoiabe.Migrations
                     b.HasIndex("id_student");
 
                     b.ToTable("StudentRegistration", (string)null);
+                });
+
+            modelBuilder.Entity("PlataformaGestaoIA.Models.StudentRegistrationRanking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Classification")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("classification");
+
+                    b.Property<DateTime?>("ConfirmBy")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("confirm_by");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("created_at");
+
+                    b.Property<float>("PerformanceCoefficient")
+                        .HasColumnType("FLOAT")
+                        .HasColumnName("performance_coefficient");
+
+                    b.Property<int>("RankPosition")
+                        .HasColumnType("INT")
+                        .HasColumnName("rank_position");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("registration_date");
+
+                    b.Property<string>("Semester")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(7)")
+                        .HasColumnName("semester");
+
+                    b.Property<short>("SubjectValue")
+                        .HasColumnType("SMALLINT")
+                        .HasColumnName("subject_value");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentRegistrationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("StatusUpdatedAt")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("status_updated_at");
+
+                    b.Property<float>("TotalScore")
+                        .HasColumnType("FLOAT")
+                        .HasColumnName("total_score");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentRegistrationId");
+
+                    b.ToTable("StudentRegistrationRanking", (string)null);
                 });
 
             modelBuilder.Entity("PlataformaGestaoIA.Models.StudentRegistrationScore", b =>
@@ -741,6 +821,27 @@ namespace plataformagestaoiabe.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("StudentRegistrationScore");
+                });
+
+            modelBuilder.Entity("PlataformaGestaoIA.Models.StudentRegistrationRanking", b =>
+                {
+                    b.HasOne("PlataformaGestaoIA.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Ranking_Student");
+
+                    b.HasOne("PlataformaGestaoIA.Models.StudentRegistration", "StudentRegistration")
+                        .WithMany()
+                        .HasForeignKey("StudentRegistrationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Ranking_StudentRegistration");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("StudentRegistration");
                 });
 
             modelBuilder.Entity("PlataformaGestaoIA.Models.StudentRegistrationSkill", b =>

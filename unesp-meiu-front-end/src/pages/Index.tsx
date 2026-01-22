@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { API_CONFIG } from "@/config/api";
+import { fetchGeneralConfig } from "@/services/generalConfigService";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -13,17 +13,8 @@ const Index = () => {
 
   const fetchAllowedDomains = async () => {
     try {
-      const response = await fetch(`${API_CONFIG.baseUrl}/general-configs/`, {
-        method: "GET",
-        headers: API_CONFIG.headers
-      });
-
-      if (!response.ok) {
-        throw new Error("Falha ao carregar as configurações gerais");
-      }
-
-      const data = await response.json();
-      const domains = data.data.configEmailDomainAvaliable
+      const config = await fetchGeneralConfig();
+      const domains = (config.configEmailDomainAvaliable || "")
         .split(";")
         .map((domain) => domain.trim().toLowerCase());
 

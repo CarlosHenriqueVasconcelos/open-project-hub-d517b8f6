@@ -14,10 +14,16 @@ export interface Skill {
 
 export interface GeneralConfig {
   id?: number;
-  config_header: string;
-  config_body: string;
-  config_consent: string;
-  config_email_domain_avaliable: string;
+  config_header?: string;
+  config_body?: string;
+  config_consent?: string;
+  config_email_domain_avaliable?: string;
+  configHeader?: string;
+  configBody?: string;
+  configConsent?: string;
+  configEmailDomainAvaliable?: string;
+  stage?: string;
+  confirmationDeadline?: string;
 }
 
 export interface LoginRequest {
@@ -74,4 +80,37 @@ export interface StudentRegistration {
   studentSkills: StudentSkill[];
   studentRegistrationScore: StudentRegistrationScore;
   filePath?: string;
+}
+
+export interface RankingCourse {
+  description?: string;
+  mode?: string;
+  period?: string;
+  campus?: string;
+}
+
+export interface RankingStudent {
+  id: number;
+  name: string;
+  ra: string;
+  cpf?: string;
+  rg?: string;
+  cellphone?: string;
+  email?: string;
+  currentCourse?: RankingCourse;
+}
+
+export interface RankingEntry {
+  id: number;
+  studentRegistrationId: number;
+  semester: string;
+  subjectValue: number;
+  rankPosition: number;
+  classification: string;
+  status: string;
+  totalScore: number;
+  performanceCoefficient: number;
+  confirmBy?: string;
+  registrationDate?: string;
+  student?: RankingStudent;
 }

@@ -36,6 +36,16 @@ var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Aplicação iniciada com sucesso. Versão: {version}", "1.4.1");
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<PrincipalDataContext>();
+    var runMigrations = Environment.GetEnvironmentVariable("RUN_MIGRATIONS");
+    if (string.Equals(runMigrations, "true", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Database.Migrate();
+    }
+}
+
 app.UseHttpLogging();
 app.UseRouting();
 app.UseCors("AllowAllOrigins");

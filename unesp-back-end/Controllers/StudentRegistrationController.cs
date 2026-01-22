@@ -6,6 +6,7 @@ using PlataformaGestaoIA.Extensions;
 using PlataformaGestaoIA.Models;
 using PlataformaGestaoIA.ViewModel;
 using PlataformaGestaoIA.Controllers.Functions;
+using System;
 using System.Text.Json;
 
 namespace PlataformaGestaoIA.Controllers
@@ -22,6 +23,12 @@ namespace PlataformaGestaoIA.Controllers
           [FromForm] string studentSkills,
           [FromServices] PrincipalDataContext context)
         {
+            var generalConfig = await context.GeneralConfigs.FirstOrDefaultAsync();
+            if (string.Equals(generalConfig?.Stage, "confirmacao", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new ResultViewModel<string>("Inscrições encerradas. A etapa de confirmação está ativa."));
+            }
+
             var registrationScore = StudentRegistrationScoreControllerFunction.DeserializeStudentScore(studentRegistrationScore);
             var skillsTemp = StudentRegistrationSkillControllerFunction.DeserializeStudentSkills(studentSkills);
 

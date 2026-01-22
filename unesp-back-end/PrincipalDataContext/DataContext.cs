@@ -27,6 +27,7 @@ namespace PlataformaGestaoIA.DataContext
         public DbSet<AllocationResult> AllocationResults { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<GeneralConfig> GeneralConfigs { get; set; }
+        public DbSet<StudentRegistrationRanking> StudentRegistrationRankings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace PlataformaGestaoIA.DataContext
             modelBuilder.ApplyConfiguration(new ProjectMap());
             modelBuilder.ApplyConfiguration(new AllocationResultMap());
             modelBuilder.ApplyConfiguration(new GeneralConfigMap());
+            modelBuilder.ApplyConfiguration(new StudentRegistrationRankingMap());
         }
     }
 }

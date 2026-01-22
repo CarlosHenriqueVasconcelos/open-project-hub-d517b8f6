@@ -61,6 +61,8 @@ namespace PlataformaGestaoIA.Controllers.Functions
             oldStudentRegistration.DoesNotMeetRequirements = newStudentRegistration.DoesNotMeetRequirements;
             oldStudentRegistration.FirstMeetingDate = newStudentRegistration.FirstMeetingDate;
             oldStudentRegistration.Semester = newStudentRegistration.Semester;
+            oldStudentRegistration.CursarUmaOuDuas = newStudentRegistration.CursarUmaOuDuas;
+            oldStudentRegistration.Presencial = newStudentRegistration.Presencial;
         }
     }
 

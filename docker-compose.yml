@@ -71,7 +71,7 @@ services:
     networks:
       - rede_plataforma_gestao
     environment:
-      - VITE_API_URL=https://meiu.pg.utfpr.edu.br/api
+      - VITE_API_BASE_URL=https://meiu.pg.utfpr.edu.br/api/v1
 
 networks:
   rede_plataforma_gestao:

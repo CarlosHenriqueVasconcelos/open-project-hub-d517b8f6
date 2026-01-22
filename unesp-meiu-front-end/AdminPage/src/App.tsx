@@ -11,6 +11,7 @@ import Skills from "./pages/Skills";
 import Projects from "./pages/Projects";
 import ProjectSkills from "./pages/ProjectSkills";
 import GeneralConfigs from "./pages/Configs";
+import Rankings from "./pages/Rankings";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,14 @@ const App = () => {
             element={
               <PrivateRoute>
                 <GeneralConfigs />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/rankings"
+            element={
+              <PrivateRoute>
+                <Rankings />
               </PrivateRoute>
             }
           />

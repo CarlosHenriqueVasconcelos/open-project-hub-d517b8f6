@@ -19,6 +19,16 @@ const GeneralConfigs = () => {
   const [configEmailDomainAvaliable, setConfigEmailDomainAvaliable] = useState(
     config?.config_email_domain_avaliable || ""
   );
+  const [stage, setStage] = useState("inscricoes");
+  const [confirmationDeadline, setConfirmationDeadline] = useState("");
+
+  const formatDatetimeLocal = (value?: string) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    const pad = (num: number) => String(num).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -29,6 +39,8 @@ const GeneralConfigs = () => {
         setConfigBody(data.data.configBody || "");
         setConfigConsent(data.data.configConsent || "");
         setConfigEmailDomainAvaliable(data.data.configEmailDomainAvaliable || "");
+        setStage(data.data.stage || "inscricoes");
+        setConfirmationDeadline(formatDatetimeLocal(data.data.confirmationDeadline));
       } catch (error) {
         toast({
           title: "Erro",
@@ -53,7 +65,9 @@ const GeneralConfigs = () => {
             configHeader,
             configBody,
             configConsent,
-            configEmailDomainAvaliable
+            configEmailDomainAvaliable,
+            stage,
+            confirmationDeadline: confirmationDeadline ? new Date(confirmationDeadline).toISOString() : null
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -68,7 +82,9 @@ const GeneralConfigs = () => {
             configHeader,
             configBody,
             configConsent,
-            configEmailDomainAvaliable
+            configEmailDomainAvaliable,
+            stage,
+            confirmationDeadline: confirmationDeadline ? new Date(confirmationDeadline).toISOString() : null
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -103,6 +119,34 @@ const GeneralConfigs = () => {
       toast({
         title: "Erro",
         description: "Falha ao deletar configuração",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const calculateSemester = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const semester = now.getMonth() + 1 <= 6 ? `${year}-1` : `${year}-2`;
+    return semester;
+  };
+
+  const handleGenerateRanking = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        `${API_BASE_URL}/rankings/generate`,
+        { semester: calculateSemester() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast({
+        title: "Sucesso",
+        description: "Classificação gerada com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Falha ao gerar classificação.",
         variant: "destructive",
       });
     }
@@ -182,9 +226,46 @@ const GeneralConfigs = () => {
           required
         />
       </div>
+      <div className="space-y-2">
+        <Label>Etapa do Processo</Label>
+        <div className="flex flex-wrap gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="radio"
+              name="stage"
+              value="inscricoes"
+              checked={stage === "inscricoes"}
+              onChange={() => setStage("inscricoes")}
+            />
+            Etapa de Inscrições
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="radio"
+              name="stage"
+              value="confirmacao"
+              checked={stage === "confirmacao"}
+              onChange={() => setStage("confirmacao")}
+            />
+            Etapa de Confirmação
+          </label>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="confirmationDeadline">Prazo global de confirmação</Label>
+        <Input
+          id="confirmationDeadline"
+          type="datetime-local"
+          value={confirmationDeadline}
+          onChange={(e) => setConfirmationDeadline(e.target.value)}
+        />
+      </div>
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={() => setConfig(null)}>
           Cancelar
+        </Button>
+        <Button type="button" variant="outline" onClick={handleGenerateRanking}>
+          Gerar classificação
         </Button>
         <Button type="submit">{config ? "Atualizar" : "Criar"}</Button>
         {config?.id && (

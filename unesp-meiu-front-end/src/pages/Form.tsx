@@ -12,6 +12,7 @@ import ConsentInfo from "@/components/form/ConsentInfo";
 import { useToast } from "@/hooks/use-toast";
 import { API_CONFIG } from "@/config/api";
 import { SCORE_LIMITS } from "@/config/scoreLimits";
+import { fetchGeneralConfig } from "@/services/generalConfigService";
 
 const Form = () => {
   const [step, setStep] = useState(1);
@@ -29,8 +30,27 @@ const Form = () => {
     // Se não houver sessão, redirecione para a página de login
     if (!userEmail) {
       navigate("/"); // Redireciona para a página de login
+      return;
     }
-  }, [navigate]);
+
+    const checkStage = async () => {
+      try {
+        const config = await fetchGeneralConfig();
+        if (config.stage?.toLowerCase() === "confirmacao") {
+          toast({
+            variant: "destructive",
+            title: "Inscrições encerradas",
+            description: "A etapa de confirmação está ativa.",
+          });
+          navigate("/confirmacao");
+        }
+      } catch (error) {
+        console.error("Erro ao carregar configurações:", error);
+      }
+    };
+
+    checkStage();
+  }, [navigate, toast]);
 
   const validateForm = (data) => {
     const requiredFields = {

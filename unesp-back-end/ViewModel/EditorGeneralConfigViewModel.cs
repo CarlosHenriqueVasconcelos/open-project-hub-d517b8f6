@@ -14,4 +14,7 @@ public class EditorGeneralConfigViewModel
 
     [Required(ErrorMessage = "Texto de consentimento é obrigatório")]
     public string ConfigConsent { get; set; }
+
+    public string? Stage { get; set; }
+    public DateTime? ConfirmationDeadline { get; set; }
 }

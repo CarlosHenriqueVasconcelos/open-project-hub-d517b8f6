@@ -32,12 +32,15 @@ namespace PlataformaGestaoIA.Controllers
             {
                 if (config == null)
                 {
+                    var stage = string.IsNullOrWhiteSpace(model.Stage) ? "inscricoes" : model.Stage;
                     config = new GeneralConfig
                     {
                         ConfigHeader = model.ConfigHeader,
                         ConfigBody = model.ConfigBody,
                         ConfigEmailDomainAvaliable = model.ConfigEmailDomainAvaliable,
-                        ConfigConsent = model.ConfigConsent
+                        ConfigConsent = model.ConfigConsent,
+                        Stage = stage,
+                        ConfirmationDeadline = model.ConfirmationDeadline
                     };
                     
                     await _context.GeneralConfigs.AddAsync(config);
@@ -51,6 +54,8 @@ namespace PlataformaGestaoIA.Controllers
                     config.ConfigBody = model.ConfigBody;
                     config.ConfigEmailDomainAvaliable = model.ConfigEmailDomainAvaliable;
                     config.ConfigConsent = model.ConfigConsent;
+                    config.Stage = string.IsNullOrWhiteSpace(model.Stage) ? config.Stage ?? "inscricoes" : model.Stage;
+                    config.ConfirmationDeadline = model.ConfirmationDeadline;
 
                     _context.GeneralConfigs.Update(config);
                     await _context.SaveChangesAsync();

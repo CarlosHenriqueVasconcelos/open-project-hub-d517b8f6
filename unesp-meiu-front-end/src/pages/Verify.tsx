@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, FileX } from "lucide-react";
 import { checkRegistrationByEmail, StudentRegistration } from "@/services/registrationService";
+import { fetchGeneralConfig } from "@/services/generalConfigService";
 import { RegistrationCard } from "@/components/registration/RegistrationCard";
 
 const Verify = () => {
@@ -27,6 +28,12 @@ const Verify = () => {
       }
 
       try {
+        const config = await fetchGeneralConfig();
+        if (config.stage?.toLowerCase() === "confirmacao") {
+          navigate("/confirmacao");
+          return;
+        }
+
         const result = await checkRegistrationByEmail(email);
         setRegistration(result);
       } catch (error) {
