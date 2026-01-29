@@ -21,6 +21,7 @@ const GeneralConfigs = () => {
   );
   const [stage, setStage] = useState("inscricoes");
   const [confirmationDeadline, setConfirmationDeadline] = useState("");
+  const [confirmationDeadlinePhase2, setConfirmationDeadlinePhase2] = useState("");
 
   const formatDatetimeLocal = (value?: string) => {
     if (!value) return "";
@@ -28,6 +29,11 @@ const GeneralConfigs = () => {
     if (Number.isNaN(date.getTime())) return "";
     const pad = (num: number) => String(num).padStart(2, "0");
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
+
+  const normalizeDeadline = (value: string) => {
+    if (!value) return null;
+    return value.length === 16 ? `${value}:00` : value;
   };
 
   useEffect(() => {
@@ -41,6 +47,7 @@ const GeneralConfigs = () => {
         setConfigEmailDomainAvaliable(data.data.configEmailDomainAvaliable || "");
         setStage(data.data.stage || "inscricoes");
         setConfirmationDeadline(formatDatetimeLocal(data.data.confirmationDeadline));
+        setConfirmationDeadlinePhase2(formatDatetimeLocal(data.data.confirmationDeadlinePhase2));
       } catch (error) {
         toast({
           title: "Erro",
@@ -67,7 +74,10 @@ const GeneralConfigs = () => {
             configConsent,
             configEmailDomainAvaliable,
             stage,
-            confirmationDeadline: confirmationDeadline ? new Date(confirmationDeadline).toISOString() : null
+            confirmationDeadline: normalizeDeadline(confirmationDeadline),
+            confirmationDeadlinePhase2: confirmationDeadlinePhase2
+              ? normalizeDeadline(confirmationDeadlinePhase2)
+              : null,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -84,7 +94,10 @@ const GeneralConfigs = () => {
             configConsent,
             configEmailDomainAvaliable,
             stage,
-            confirmationDeadline: confirmationDeadline ? new Date(confirmationDeadline).toISOString() : null
+            confirmationDeadline: normalizeDeadline(confirmationDeadline),
+            confirmationDeadlinePhase2: confirmationDeadlinePhase2
+              ? normalizeDeadline(confirmationDeadlinePhase2)
+              : null,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -258,6 +271,15 @@ const GeneralConfigs = () => {
           type="datetime-local"
           value={confirmationDeadline}
           onChange={(e) => setConfirmationDeadline(e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="confirmationDeadlinePhase2">Prazo da 2ª etapa de confirmação</Label>
+        <Input
+          id="confirmationDeadlinePhase2"
+          type="datetime-local"
+          value={confirmationDeadlinePhase2}
+          onChange={(e) => setConfirmationDeadlinePhase2(e.target.value)}
         />
       </div>
       <div className="flex justify-end space-x-2">

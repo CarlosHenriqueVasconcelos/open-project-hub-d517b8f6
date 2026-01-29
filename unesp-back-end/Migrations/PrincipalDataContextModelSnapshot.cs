@@ -182,6 +182,10 @@ namespace plataformagestaoiabe.Migrations
                         .HasColumnType("DATETIME")
                         .HasColumnName("config_confirmation_deadline");
 
+                    b.Property<DateTime?>("ConfirmationDeadlinePhase2")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("config_confirmation_deadline_phase2");
+
                     b.Property<string>("ConfigBody")
                         .IsRequired()
                         .HasColumnType("LONGTEXT")
@@ -394,7 +398,6 @@ namespace plataformagestaoiabe.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "cursarUmaOuDuas");
 
                     b.Property<short?>("DoesNotMeetRequirements")
-                        .IsRequired()
                         .HasColumnType("SMALLINT")
                         .HasColumnName("does_not_meet_requirements");
 

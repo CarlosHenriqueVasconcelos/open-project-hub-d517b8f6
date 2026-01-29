@@ -8,15 +8,46 @@ namespace PlataformaGestaoIA.Controllers.Functions
     {
         public static async Task<VerifyStudentRegistrationResult> VerifySemester(StudentRegistration studentRegistration, PrincipalDataContext context)
         {
-            var existingStudentRegistration = await context.StudentRegistrations
-                    .Include(sr => sr.Student)
+            var email = studentRegistration?.Student?.User?.Email?.Trim();
+            var semester = studentRegistration?.Semester;
+            var ra = studentRegistration?.Student?.RA;
+
+            var query = context.StudentRegistrations
+                .Include(sr => sr.Student)
                     .ThenInclude(ss => ss.CurrentCourse)
-                    .Include(sr => sr.StudentRegistrationScore)
-                    .Include(sr => sr.StudentSkills)
+                .Include(sr => sr.Student)
+                    .ThenInclude(ss => ss.User)
+                .Include(sr => sr.StudentRegistrationScore)
+                .Include(sr => sr.StudentSkills)
                     .ThenInclude(ss => ss.Skill)
-                    .AsTracking().FirstOrDefaultAsync(sr => sr.Student != null &&
-                                sr.Student.RA.Equals(studentRegistration.Student.RA) &&
-                                sr.Semester.Equals(studentRegistration.Semester));
+                .AsTracking();
+
+            StudentRegistration? existingStudentRegistration = null;
+
+            if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(semester))
+            {
+                var normalizedEmail = email.ToLower();
+                existingStudentRegistration = await query
+                    .Where(sr => sr.Semester == semester
+                        && sr.Student != null
+                        && sr.Student.User != null
+                        && sr.Student.User.Email != null
+                        && sr.Student.User.Email.ToLower() == normalizedEmail)
+                    .OrderByDescending(sr => sr.RegistrationDate)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (existingStudentRegistration == null
+                && !string.IsNullOrWhiteSpace(ra)
+                && !string.IsNullOrWhiteSpace(semester))
+            {
+                existingStudentRegistration = await query
+                    .Where(sr => sr.Semester == semester
+                        && sr.Student != null
+                        && sr.Student.RA == ra)
+                    .OrderByDescending(sr => sr.RegistrationDate)
+                    .FirstOrDefaultAsync();
+            }
 
             if (existingStudentRegistration != null)
             {

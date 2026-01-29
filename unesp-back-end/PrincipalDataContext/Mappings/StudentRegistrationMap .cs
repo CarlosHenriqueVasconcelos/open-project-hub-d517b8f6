@@ -51,7 +51,6 @@ namespace PlataformaGestaoIA.DataContext.Mappings
                 .HasColumnType("BIT");
 
             builder.Property(x => x.DoesNotMeetRequirements)
-                .IsRequired()
                 .HasColumnName("does_not_meet_requirements")
                 .HasColumnType("SMALLINT");
 

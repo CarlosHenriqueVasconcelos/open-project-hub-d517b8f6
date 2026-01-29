@@ -248,7 +248,7 @@ const ScoresInfo = ({ formData, setFormData }) => {
         </FormField>
 
         <FormField
-          label="Nota em uma das disciplinas Engineering Design Process, Industry 4.0 e 5.0 ou Design de Soluções para Problemas Reais, a partir do período letivo 2021-1, superior a 9,0 - 30 pontos por disciplina (sem limite)."
+          label="Nota em uma das disciplinas Engineering Design Process, Industry 4.0 e 5.0, Design de Soluções para Problemas Reais, Engenharia Colaborativa ou Processo de Projeto em Engenharia a partir do período letivo 2021-1, superior a 9,0- 30 pontos por disciplina (sem limite)."
         >
           <Input
             type="number"

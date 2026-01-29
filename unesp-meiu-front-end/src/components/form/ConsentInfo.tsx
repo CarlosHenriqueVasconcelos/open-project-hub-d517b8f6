@@ -7,8 +7,8 @@ const ConsentInfo = ({ formData, setFormData }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) { // 2MB in bytes
-        alert("O arquivo deve ter no máximo 2MB");
+      if (file.size > 5 * 1024 * 1024) { // 5MB in bytes
+        alert("O arquivo deve ter no máximo 5MB");
         e.target.value = "";
         return;
       }
@@ -35,7 +35,7 @@ const ConsentInfo = ({ formData, setFormData }) => {
         <FormField
           label="Um único arquivo PDF contendo, nessa ordem: (1°) Histórico Escolar atualizado, obtido no Portal do Aluno (http://portal.utfpr.edu.br/secretaria). Certifique-se de que não há páginas cortadas e que apareça o link e data de acesso em todas as páginas. (2°) Ficha de Pontuação do Anexo III do Edital, preenchida. (3°) Documentação comprobatória referente aos pontos declarados na Ficha de Pontuação. Para juntar (merge) arquivos PDF, há serviços on-line. Por exemplo: https://smallpdf.com/pt/juntar-pdf. Nomear o arquivo PDF da seguinte maneira: Nome Completo do Estudante RA.pdf. Por exemplo: Sebastião Rodrigues Maia 1234567.pdf"
           required
-          tooltip="Faça upload do seu documento de registro em formato PDF (máx. 2MB)"
+          tooltip="Faça upload do seu documento de registro em formato PDF (máx. 5MB)"
         >
           <Input
             type="file"
@@ -56,7 +56,7 @@ const ConsentInfo = ({ formData, setFormData }) => {
             htmlFor="agreed"
             className="text-sm text-gray-600 leading-relaxed"
           >
-            Declaro ter conhecimento e aceitar as normas e condições previstas no Edital 58/2023 PROGRAD, responsabilizo-me pela exatidão e veracidade das informações prestadas e, caso selecionado, SOLICITO MINHA MATRÍCULA para o primeiro período letivo de 2025 na(s) disciplina(s) assinalada(s) neste formulário eletrônico de inscrição.
+            Declaro ter conhecimento e aceitar as normas e condições previstas no Edital, responsabilizo-me pela exatidão e veracidade das informações prestadas e, caso selecionado, SOLICITO MINHA MATRÍCULA para o primeiro período letivo de 2026 na(s) disciplina(s) assinalada(s) neste formulário eletrônico de inscrição.
           </Label>
         </div>
       </div>

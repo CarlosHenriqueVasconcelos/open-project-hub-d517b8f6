@@ -13,4 +13,5 @@ public class GeneralConfig
     public string ConfigConsent { get; set; }
     public string? Stage { get; set; }
     public DateTime? ConfirmationDeadline { get; set; }
+    public DateTime? ConfirmationDeadlinePhase2 { get; set; }
 }

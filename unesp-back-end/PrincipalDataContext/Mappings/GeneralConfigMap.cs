@@ -39,6 +39,10 @@ namespace PlataformaGestaoIA.DataContext.Mappings
             builder.Property(x => x.ConfirmationDeadline)
                 .HasColumnName("config_confirmation_deadline")
                 .HasColumnType("DATETIME");
+
+            builder.Property(x => x.ConfirmationDeadlinePhase2)
+                .HasColumnName("config_confirmation_deadline_phase2")
+                .HasColumnType("DATETIME");
         }
     }
 }

@@ -17,4 +17,5 @@ public class EditorGeneralConfigViewModel
 
     public string? Stage { get; set; }
     public DateTime? ConfirmationDeadline { get; set; }
+    public DateTime? ConfirmationDeadlinePhase2 { get; set; }
 }

@@ -16,6 +16,7 @@ const SUBJECTS = [
   { value: 16, label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina" },
   { value: 32, label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco" },
 ];
+const MAX_CONFIRMED_PER_SUBJECT = 45;
 
 const statusLabel = (status: string) => {
   switch (status) {
@@ -49,6 +50,21 @@ const Confirmation = () => {
     const year = now.getFullYear();
     return now.getMonth() + 1 <= 6 ? `${year}-1` : `${year}-2`;
   }, []);
+
+  const parseDate = (value?: string) => {
+    if (!value) return null;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const now = new Date();
+  const phase1Deadline = parseDate(config?.confirmationDeadline);
+  const phase2Deadline = parseDate(config?.confirmationDeadlinePhase2);
+  const isPhase1Active = Boolean(phase1Deadline && now <= phase1Deadline);
+  const isPhase2Active = Boolean(
+    phase1Deadline && phase2Deadline && now > phase1Deadline && now <= phase2Deadline
+  );
+  const phaseLabel = isPhase1Active ? "Fase 1" : isPhase2Active ? "Fase 2" : "Fora do prazo";
 
   const loadSubject = async (subjectValue: number) => {
     const data = await fetchRankings(subjectValue, semester);
@@ -107,9 +123,9 @@ const Confirmation = () => {
     }
   };
 
-  const formatDate = (value?: string) => {
+  const formatDate = (value?: string | Date) => {
     if (!value) return "-";
-    const date = new Date(value);
+    const date = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(date.getTime())) return "-";
     return date.toLocaleString("pt-BR");
   };
@@ -125,18 +141,37 @@ const Confirmation = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-6xl mx-auto space-y-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 space-y-2">
-          <h1 className="text-2xl font-semibold text-gray-900">Etapa de Confirmação</h1>
-          <p className="text-gray-600">
-            Prazo global: {config?.confirmationDeadline ? formatDate(config.confirmationDeadline) : "Não definido"}
-          </p>
-          <p className="text-gray-600">Semestre atual: {semester}</p>
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-2xl font-semibold text-gray-900">Etapa de Confirmação</h1>
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
+              Fase atual: {phaseLabel}
+            </span>
+          </div>
+          <div className="grid gap-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-lg bg-gray-50 px-3 py-2">
+              <span className="text-xs font-semibold uppercase text-gray-500">Fase 1 até</span>
+              <p className="text-gray-900">{formatDate(phase1Deadline)}</p>
+            </div>
+            <div className="rounded-lg bg-gray-50 px-3 py-2">
+              <span className="text-xs font-semibold uppercase text-gray-500">Fase 2 até</span>
+              <p className="text-gray-900">{formatDate(phase2Deadline)}</p>
+            </div>
+            <div className="rounded-lg bg-gray-50 px-3 py-2">
+              <span className="text-xs font-semibold uppercase text-gray-500">Semestre atual</span>
+              <p className="text-gray-900">{semester}</p>
+            </div>
+          </div>
         </div>
 
         <Tabs defaultValue={String(SUBJECTS[0].value)} className="space-y-4">
-          <TabsList className="flex flex-wrap justify-start">
+          <TabsList className="grid w-full grid-cols-1 gap-2 rounded-xl bg-white p-2 shadow-sm sm:grid-cols-2 xl:grid-cols-3">
             {SUBJECTS.map((subject) => (
-              <TabsTrigger key={subject.value} value={String(subject.value)}>
+              <TabsTrigger
+                key={subject.value}
+                value={String(subject.value)}
+                className="h-auto justify-start whitespace-normal text-left"
+              >
                 {subject.label}
               </TabsTrigger>
             ))}
@@ -144,9 +179,16 @@ const Confirmation = () => {
 
           {SUBJECTS.map((subject) => {
             const subjectRankings = rankings[subject.value] || [];
+            const confirmedCount = subjectRankings.filter((entry) => entry.status === "confirmado").length;
+            const isSubjectFull = confirmedCount >= MAX_CONFIRMED_PER_SUBJECT;
             return (
               <TabsContent key={subject.value} value={String(subject.value)}>
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
+                  {isSubjectFull && (
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+                      Esta matéria já possui {MAX_CONFIRMED_PER_SUBJECT} confirmados. Todas as vagas foram preenchidas.
+                    </div>
+                  )}
                   <div className="overflow-x-auto">
                     <Table>
                     <TableHeader>
@@ -176,10 +218,16 @@ const Confirmation = () => {
                       )}
                       {subjectRankings.map((entry) => {
                         const isOwner = entry.student?.email?.toLowerCase() === userEmail?.toLowerCase();
+                        const confirmBy = parseDate(entry.confirmBy);
+                        const isWithinDeadline = Boolean(confirmBy && now <= confirmBy);
+                        const isConfirmationOpen = isPhase1Active || isPhase2Active;
                         const canConfirm =
                           isOwner &&
                           entry.classification === "classificado" &&
-                          entry.status === "pendente";
+                          entry.status === "pendente" &&
+                          isConfirmationOpen &&
+                          isWithinDeadline &&
+                          !isSubjectFull;
                         const rowClassName = cn(
                           entry.status === "desistencia" && "bg-rose-50",
                           entry.status !== "desistencia" &&

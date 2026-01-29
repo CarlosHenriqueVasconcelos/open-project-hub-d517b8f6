@@ -59,6 +59,7 @@ services:
       MYSQL_DATABASE: PlataformaGestao
       BD_ENVIRONMENT: Docker
       ASPNETCORE_ENVIRONMENT: Development
+      RUN_MIGRATIONS: "true"
     networks:
       - rede_plataforma_gestao
 

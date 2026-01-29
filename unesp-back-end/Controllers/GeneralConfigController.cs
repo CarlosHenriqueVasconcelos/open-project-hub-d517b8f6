@@ -40,7 +40,8 @@ namespace PlataformaGestaoIA.Controllers
                         ConfigEmailDomainAvaliable = model.ConfigEmailDomainAvaliable,
                         ConfigConsent = model.ConfigConsent,
                         Stage = stage,
-                        ConfirmationDeadline = model.ConfirmationDeadline
+                        ConfirmationDeadline = model.ConfirmationDeadline,
+                        ConfirmationDeadlinePhase2 = model.ConfirmationDeadlinePhase2
                     };
                     
                     await _context.GeneralConfigs.AddAsync(config);
@@ -56,6 +57,7 @@ namespace PlataformaGestaoIA.Controllers
                     config.ConfigConsent = model.ConfigConsent;
                     config.Stage = string.IsNullOrWhiteSpace(model.Stage) ? config.Stage ?? "inscricoes" : model.Stage;
                     config.ConfirmationDeadline = model.ConfirmationDeadline;
+                    config.ConfirmationDeadlinePhase2 = model.ConfirmationDeadlinePhase2;
 
                     _context.GeneralConfigs.Update(config);
                     await _context.SaveChangesAsync();

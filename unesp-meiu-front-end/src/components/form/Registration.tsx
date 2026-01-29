@@ -99,12 +99,12 @@ const Registration = ({ formData, setFormData }) => {
                 >
                     <div className="space-y-2">
                         {[
-                            { id: "Engineering", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa", value: "1" },
-                            { id: "Industry", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa", value: "4" },
-                            { id: "Design", label: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana", value: "2" },
-                            { id: "Engenharia", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo", value: "8" },
-                            { id: "Processo", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina", value: "16" },
-                            { id: "Manutencao", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco", value: "32" },
+                            { id: "Engineering", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa ( Segunda-feira de 18h40 às 20h20(2N1, 2N2)", value: "1" },
+                            { id: "Industry", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa (Quarta-feira de 18h40 às 20h20(4N1, 4N2))", value: "4" },
+                            { id: "Design", label: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana  (Quinta-feira de 13h50 às 15h30 (5T2,5T3))", value: "2" },
+                            { id: "Engenharia", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo (Terça-feira de 18h40 às 20h20(3N1, 3N2))", value: "8" },
+                            { id: "Processo", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina (Sexta-feira de 13h50 às 15h30(6T2, 6T3))", value: "16" },
+                            { id: "Manutencao", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco (Segunda-feira de 18h40 às 20h20 (2N1, 2N2))", value: "32" },
                         ].map((subject) => (
                             <div key={subject.id} className="flex items-center space-x-2">
                                 <input
@@ -133,12 +133,12 @@ const Registration = ({ formData, setFormData }) => {
                 >
                     <div className="space-y-2">
                         {[
-                            { id: "EngineeringchoicePriority", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa", value: "1" },
-                            { id: "Industry4", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa", value: "2" },
+                            { id: "EngineeringchoicePriority", label: "Engineering Design Process (ENG01B) - Campus Ponta Grossa ", value: "1" },
+                            { id: "Industry4", label: "Industry 4.0 e 5.0 (ENG01C) - Campus Ponta Grossa ", value: "2" },
                             { id: "DesignchoicePriority", label: "Design de Soluções para Problemas Reais (DPR01MEIU) - Campus Apucarana", value: "3" },
-                            { id: "EngColaborativa", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo", value: "4" },
-                            { id: "ProcessochoicePriority", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina", value: "5" },
-                            { id: "ManutencaochoicePriority", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco", value: "6" },
+                            { id: "EngColaborativa", label: "Engenharia Colaborativa (OPETH003) - Campus Toledo ", value: "4" },
+                            { id: "ProcessochoicePriority", label: "Processo de Projeto em Engenharia (OP69B) - Campus Londrina ", value: "5" },
+                            { id: "ManutencaochoicePriority", label: "Manutenção 4.0 - Desafios Colaborativos (DC46M) - Campus Pato Branco ", value: "6" },
                         ].map((choicePriority_type) => (
                             <div key={choicePriority_type.id} className="flex items-center space-x-2">
                                 <input

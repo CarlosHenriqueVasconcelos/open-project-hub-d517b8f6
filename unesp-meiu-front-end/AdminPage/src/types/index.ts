@@ -24,6 +24,7 @@ export interface GeneralConfig {
   configEmailDomainAvaliable?: string;
   stage?: string;
   confirmationDeadline?: string;
+  confirmationDeadlinePhase2?: string;
 }
 
 export interface LoginRequest {

@@ -36,6 +36,7 @@ services:
       MYSQL_DATABASE: PlataformaGestao
       BD_ENVIRONMENT: Docker
       ASPNETCORE_ENVIRONMENT: Development
+      RUN_MIGRATIONS: "true"
       ConnectionStrings__Default: Server=mysql_plataforma_gestao_ia;Port=3306;Database=PlataformaGestao;Uid=root;Pwd=plat@forma_i@_2024;charset=utf8mb4;
     networks:
       - rede_plataforma_gestao

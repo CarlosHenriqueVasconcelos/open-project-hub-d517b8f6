@@ -1,0 +1,41 @@
+Git hub https://github.com/CarlosHenriqueVasconcelos/open-project-hub-d517b8f6.git para clonar e ter as pastas do projeto
+
+docker-composeLocal para rodar e fazer mudanças e testar no PC
+
+Docker-compose.yml - arquivo que tem q subir para o cluster e partindo dele vc da pull para atualizar as imagens no repositório Docker carlos
+
+Comando para buildar e subir as imagens, mas o projeto esta privado até momento e só eu consigo rodar os comandos. Vou mudar isso mais pra frente
+
+Backend
+
+docker build -t carlosvasc0n/plataforma-backend:latest -f .\unesp-back-end\Dockerfile .\unesp-back-end
+docker push carlosvasc0n/plataforma-backend:latest
+
+Front
+
+docker build --build-arg VITE_API_BASE_URL=https://meiu.pg.utfpr.edu.br/api/v1 -t carlosvasc0n/plataforma-frontend:latest -f .\unesp-meiu-front-end\Dockerfile .\unesp-meiu-front-end
+docker push carlosvasc0n/plataforma-frontend:latest
+
+
+Após as imagens atualizadas no Docker, acessar a VPN da utf pelo FortiClient logar com usuario da utf e depois acessar o cluster
+Caso não tenha acessado a VPN, o acesso ao cluster vai ser negado.
+
+Acesso ao Cluster:
+
+ssh a1152246@200.134.21.26
+senha : Utf.pg24!!
+
+Dentro do cluster :
+cd plataforma_gestao - acessa nossa pasta com os arquivos onde o docker-compose.yml já está
+docker-compose down - baixar a aplicação
+docker-compose pull - não preciso explicar kkkk
+docker-compose up -d - subir ela novamente 
+
+Renovar certificado certbot:
+Preciso achar os comandos certos que não lembro de cabeça
+
+
+
+Area do Administrador        
+"user": "Meiu@gmail.com",
+"password": "tZvlOa(pgvWhzxM8IRF}OPb41"

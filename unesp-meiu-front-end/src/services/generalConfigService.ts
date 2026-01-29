@@ -7,6 +7,7 @@ export interface GeneralConfig {
   configConsent?: string;
   stage?: string;
   confirmationDeadline?: string;
+  confirmationDeadlinePhase2?: string;
 }
 
 export async function fetchGeneralConfig(): Promise<GeneralConfig> {

@@ -21,6 +21,7 @@ namespace PlataformaGestaoIA.Controllers
         private const string StatusDesistencia = "desistencia";
         private const string StatusExpirado = "expirado";
         private const string StatusEspera = "espera";
+        private const int MaxClassifiedPerSubject = 45;
 
         private static readonly short[] SubjectValues = { 1, 2, 4, 8, 16, 32 };
         private static readonly Dictionary<short, short> PriorityToSubject = new()
@@ -32,6 +33,48 @@ namespace PlataformaGestaoIA.Controllers
             { 5, 16 },
             { 6, 32 }
         };
+        private static TimeZoneInfo? _brasiliaTimeZone;
+
+        private static DateTime GetBrasiliaNow()
+        {
+            var utcNow = DateTime.UtcNow;
+            var timeZone = ResolveBrasiliaTimeZone();
+            return TimeZoneInfo.ConvertTimeFromUtc(utcNow, timeZone);
+        }
+
+        private static TimeZoneInfo ResolveBrasiliaTimeZone()
+        {
+            if (_brasiliaTimeZone != null)
+            {
+                return _brasiliaTimeZone;
+            }
+
+            try
+            {
+                _brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+                return _brasiliaTimeZone;
+            }
+            catch (TimeZoneNotFoundException)
+            {
+            }
+            catch (InvalidTimeZoneException)
+            {
+            }
+
+            try
+            {
+                _brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                return _brasiliaTimeZone;
+            }
+            catch (TimeZoneNotFoundException)
+            {
+            }
+            catch (InvalidTimeZoneException)
+            {
+            }
+
+            return TimeZoneInfo.Utc;
+        }
 
         [Authorize]
         [HttpPost("api/v1/rankings/generate")]
@@ -45,7 +88,7 @@ namespace PlataformaGestaoIA.Controllers
 
             var config = await context.GeneralConfigs.FirstOrDefaultAsync();
             var confirmBy = config?.ConfirmationDeadline;
-            var now = DateTime.UtcNow;
+            var now = GetBrasiliaNow();
 
             var existing = context.StudentRegistrationRankings
                 .Where(r => r.Semester == semester);
@@ -125,7 +168,7 @@ namespace PlataformaGestaoIA.Controllers
                 {
                     var entry = subjectEntries[i];
                     entry.RankPosition = i + 1;
-                    if (i < 45)
+                    if (i < MaxClassifiedPerSubject)
                     {
                         entry.Classification = ClassificationClassificado;
                         entry.Status = StatusPendente;
@@ -152,7 +195,12 @@ namespace PlataformaGestaoIA.Controllers
             if (!SubjectValues.Contains(subject))
                 return BadRequest(new ResultViewModel<string>("Matéria inválida."));
 
-            await ApplyDeadlineAsync(context, currentSemester);
+            var config = await context.GeneralConfigs.FirstOrDefaultAsync();
+            await ApplyPhaseRulesAsync(
+                context,
+                currentSemester,
+                config?.ConfirmationDeadline,
+                config?.ConfirmationDeadlinePhase2);
 
             var rankings = await context.StudentRegistrationRankings
                 .Include(r => r.Student)
@@ -180,7 +228,12 @@ namespace PlataformaGestaoIA.Controllers
                 ? CalculateSemester(DateTime.Now)
                 : semester;
 
-            await ApplyDeadlineAsync(context, currentSemester);
+            var config = await context.GeneralConfigs.FirstOrDefaultAsync();
+            await ApplyPhaseRulesAsync(
+                context,
+                currentSemester,
+                config?.ConfirmationDeadline,
+                config?.ConfirmationDeadlinePhase2);
 
             var rankings = await context.StudentRegistrationRankings
                 .Include(r => r.Student)
@@ -209,6 +262,16 @@ namespace PlataformaGestaoIA.Controllers
             if (status != StatusConfirmado && status != StatusDesistencia)
                 return BadRequest(new ResultViewModel<string>("Status inválido."));
 
+            var config = await context.GeneralConfigs.FirstOrDefaultAsync();
+            var now = GetBrasiliaNow();
+            var phase1Deadline = config?.ConfirmationDeadline;
+            var phase2Deadline = config?.ConfirmationDeadlinePhase2;
+            var isPhase1Active = IsPhase1Active(now, phase1Deadline);
+            var isPhase2Active = IsPhase2Active(now, phase1Deadline, phase2Deadline);
+
+            if (!isPhase1Active && !isPhase2Active)
+                return BadRequest(new ResultViewModel<string>("Prazo de confirmação encerrado."));
+
             var ranking = await context.StudentRegistrationRankings
                 .Include(r => r.Student)
                     .ThenInclude(s => s.User)
@@ -226,23 +289,53 @@ namespace PlataformaGestaoIA.Controllers
             if (!string.Equals(ranking.Status, StatusPendente, StringComparison.OrdinalIgnoreCase))
                 return BadRequest(new ResultViewModel<string>("Este registro não está pendente para confirmação."));
 
-            if (ranking.ConfirmBy.HasValue && ranking.ConfirmBy.Value < DateTime.UtcNow)
+            if (ranking.ConfirmBy.HasValue && ranking.ConfirmBy.Value < now)
             {
                 ranking.Status = StatusExpirado;
-                ranking.StatusUpdatedAt = DateTime.UtcNow;
-                ranking.UpdatedAt = DateTime.UtcNow;
+                ranking.StatusUpdatedAt = now;
+                ranking.UpdatedAt = now;
                 await context.SaveChangesAsync();
                 return BadRequest(new ResultViewModel<string>("Prazo de confirmação encerrado."));
             }
 
+            var isPhase1Entry = phase1Deadline.HasValue
+                && ranking.ConfirmBy.HasValue
+                && ranking.ConfirmBy.Value <= phase1Deadline.Value;
+            var isPhase2Entry = phase1Deadline.HasValue
+                && ranking.ConfirmBy.HasValue
+                && ranking.ConfirmBy.Value > phase1Deadline.Value;
+
+            if (isPhase1Active && !isPhase1Entry)
+                return BadRequest(new ResultViewModel<string>("Este registro não está liberado para esta etapa."));
+
+            if (isPhase2Active && !isPhase2Entry)
+                return BadRequest(new ResultViewModel<string>("Este registro não está liberado para esta etapa."));
+
+            if (status == StatusConfirmado)
+            {
+                var confirmedCount = await context.StudentRegistrationRankings
+                    .Where(r => r.Semester == ranking.Semester
+                        && r.SubjectValue == ranking.SubjectValue
+                        && r.Status == StatusConfirmado)
+                    .CountAsync();
+
+                if (confirmedCount >= MaxClassifiedPerSubject)
+                    return BadRequest(new ResultViewModel<string>("Todas as vagas já foram preenchidas para esta matéria."));
+            }
+
             ranking.Status = status;
-            ranking.StatusUpdatedAt = DateTime.UtcNow;
-            ranking.UpdatedAt = DateTime.UtcNow;
+            ranking.StatusUpdatedAt = now;
+            ranking.UpdatedAt = now;
             await context.SaveChangesAsync();
 
-            if (status == StatusDesistencia)
+            if (status == StatusDesistencia && isPhase2Active && phase1Deadline.HasValue && phase2Deadline.HasValue)
             {
-                await PromoteNextAsync(context, ranking.Semester, ranking.SubjectValue, ranking.ConfirmBy);
+                await PromoteWaitlistToVacanciesAsync(
+                    context,
+                    ranking.Semester,
+                    phase1Deadline.Value,
+                    phase2Deadline.Value,
+                    ranking.SubjectValue);
             }
 
             return Ok(new ResultViewModel<RankingEntryViewModel>(MapRankingEntry(ranking)));
@@ -329,9 +422,44 @@ namespace PlataformaGestaoIA.Controllers
             };
         }
 
-        private static async Task ApplyDeadlineAsync(PrincipalDataContext context, string semester)
+        private static bool IsPhase1Active(DateTime now, DateTime? phase1Deadline)
         {
-            var now = DateTime.UtcNow;
+            return phase1Deadline.HasValue && now <= phase1Deadline.Value;
+        }
+
+        private static bool IsPhase2Active(DateTime now, DateTime? phase1Deadline, DateTime? phase2Deadline)
+        {
+            return phase1Deadline.HasValue
+                && phase2Deadline.HasValue
+                && now > phase1Deadline.Value
+                && now <= phase2Deadline.Value;
+        }
+
+        private static async Task ApplyPhaseRulesAsync(
+            PrincipalDataContext context,
+            string semester,
+            DateTime? phase1Deadline,
+            DateTime? phase2Deadline)
+        {
+            var now = GetBrasiliaNow();
+            await ApplyDeadlineAsync(context, semester, now);
+
+            if (IsPhase2Active(now, phase1Deadline, phase2Deadline) && phase1Deadline.HasValue && phase2Deadline.HasValue)
+            {
+                await PromoteWaitlistToVacanciesAsync(
+                    context,
+                    semester,
+                    phase1Deadline.Value,
+                    phase2Deadline.Value,
+                    null);
+            }
+        }
+
+        private static async Task ApplyDeadlineAsync(
+            PrincipalDataContext context,
+            string semester,
+            DateTime now)
+        {
             var expired = await context.StudentRegistrationRankings
                 .Where(r => r.Semester == semester
                     && r.Classification == ClassificationClassificado
@@ -353,32 +481,69 @@ namespace PlataformaGestaoIA.Controllers
             await context.SaveChangesAsync();
         }
 
-        private static async Task PromoteNextAsync(
+        private static async Task PromoteWaitlistToVacanciesAsync(
             PrincipalDataContext context,
             string semester,
-            short subjectValue,
-            DateTime? confirmBy)
+            DateTime phase1Deadline,
+            DateTime phase2Deadline,
+            short? subjectValue)
         {
-            if (confirmBy.HasValue && confirmBy.Value < DateTime.UtcNow)
-                return;
+            var now = GetBrasiliaNow();
+            var subjects = subjectValue.HasValue ? new[] { subjectValue.Value } : SubjectValues;
+            var updated = false;
 
-            var next = await context.StudentRegistrationRankings
-                .Where(r => r.Semester == semester
-                    && r.SubjectValue == subjectValue
-                    && r.Classification == ClassificationEspera
-                    && (r.Status == StatusEspera || r.Status == StatusPendente))
-                .OrderBy(r => r.RankPosition)
-                .FirstOrDefaultAsync();
+            foreach (var subject in subjects)
+            {
+                var confirmedCount = await context.StudentRegistrationRankings
+                    .Where(r => r.Semester == semester
+                        && r.SubjectValue == subject
+                        && r.Status == StatusConfirmado)
+                    .CountAsync();
 
-            if (next == null)
-                return;
+                if (confirmedCount >= MaxClassifiedPerSubject)
+                    continue;
 
-            next.Classification = ClassificationClassificado;
-            next.Status = StatusPendente;
-            next.StatusUpdatedAt = DateTime.UtcNow;
-            next.UpdatedAt = DateTime.UtcNow;
+                var pendingCount = await context.StudentRegistrationRankings
+                    .Where(r => r.Semester == semester
+                        && r.SubjectValue == subject
+                        && r.Classification == ClassificationClassificado
+                        && r.Status == StatusPendente
+                        && r.ConfirmBy != null
+                        && r.ConfirmBy > phase1Deadline)
+                    .CountAsync();
 
-            await context.SaveChangesAsync();
+                var needed = MaxClassifiedPerSubject - confirmedCount - pendingCount;
+                if (needed <= 0)
+                    continue;
+
+                var nextCandidates = await context.StudentRegistrationRankings
+                    .Where(r => r.Semester == semester
+                        && r.SubjectValue == subject
+                        && r.Classification == ClassificationEspera
+                        && r.Status == StatusEspera)
+                    .OrderBy(r => r.RankPosition)
+                    .Take(needed)
+                    .ToListAsync();
+
+                if (nextCandidates.Count == 0)
+                    continue;
+
+                foreach (var candidate in nextCandidates)
+                {
+                    candidate.Classification = ClassificationClassificado;
+                    candidate.Status = StatusPendente;
+                    candidate.ConfirmBy = phase2Deadline;
+                    candidate.StatusUpdatedAt = now;
+                    candidate.UpdatedAt = now;
+                }
+
+                updated = true;
+            }
+
+            if (updated)
+            {
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
