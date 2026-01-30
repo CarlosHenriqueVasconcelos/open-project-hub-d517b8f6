@@ -167,6 +167,24 @@ const Form = () => {
 
   const handleNext = () => {
     if (step < totalSteps) {
+      // Validação da etapa 5 (Habilidades)
+      if (step === 5) {
+        const selectedSkills = (formData.studentSkills || []).filter(
+          (s) => (s.level || 0) > 0
+        );
+        
+        if (selectedSkills.length !== 6) {
+          alert(`Você precisa selecionar exatamente 6 habilidades para continuar. Atualmente: ${selectedSkills.length}/6`);
+          toast({
+            variant: "destructive",
+            title: "Habilidades insuficientes",
+            description: `Selecione exatamente 6 habilidades. Você selecionou ${selectedSkills.length}.`,
+          });
+          return;
+        }
+      }
+
+      // Validação da etapa 6 (Scores)
       if (step === 6) {
         const scores = formData.studentRegistrationScore || {};
         const errors = Object.entries(SCORE_LIMITS).filter(([field, limit]) => {
